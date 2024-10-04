@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+import 'package:diamond_app/progress_loader/progress_loader.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+>>>>>>> 4f1f1556c83e6336d188e9bd3d81a5bbc3fc3c7d
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:diamond_app/Home/exclusive_screen.dart';
@@ -36,6 +41,8 @@ class _DrawerPageState extends State<DrawerPage> {
 
   @override
   Widget build(BuildContext context) {
+    ProgressLoader pl = ProgressLoader(context, isDismissible: true);
+
     return Drawer(
       child: ListView(
         children: [
@@ -256,7 +263,74 @@ class _DrawerPageState extends State<DrawerPage> {
             padding: const EdgeInsets.all(30),
             child: GestureDetector(
               onTap: () async {
-                return await _logout(context);
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            "Logout",
+                            style: TextStyle(fontSize: 25),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Text(
+                            "Are you sure you want to logout account?",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Container(
+                                  height: 50,
+                                  width: 100,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: const Color(0xffE1E1E1)),
+                                  child: const Center(
+                                    child: Text("No"),
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () async {
+                                  await pl.show();
+                                  await _logout(context);
+                                  await pl.hide();
+                                  Navigator.pop(context);
+                                },
+                                child: Container(
+                                  height: 50,
+                                  width: 100,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: const Color(0xffA47842),
+                                  ),
+                                  child: const Center(
+                                      child: Text(
+                                    "Yes",
+                                    style: TextStyle(color: Colors.white),
+                                  )),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                );
               },
               child: Container(
                 height: 60,
@@ -289,11 +363,14 @@ class _DrawerPageState extends State<DrawerPage> {
   }
 
   Future<void> _logout(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+
+    // Clear user details from SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear(); // Clear all saved data
+    await prefs.clear();
 
     // Navigate to Sign-In screen and remove HomeScreen from the stack
-    Navigator.pushAndRemoveUntil(
+    await Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const TabBarScreen()),
       (Route<dynamic> route) => false,

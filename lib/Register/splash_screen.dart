@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:diamond_app/Home/home_screen.dart';
 import 'package:diamond_app/Register/tab_bar_screen.dart';
 import 'package:diamond_app/utiles/sherd_pref.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -49,14 +50,12 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> selectscreen() async {
-    Shr shr = Shr();
-    Map m1 = await shr.readShr();
-    print("=== m1 ====${m1}");
-    if (m1["check"] == true) {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
       Future.delayed(
         const Duration(seconds: 3),
         () {
-          Navigator.push(
+          Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => const HomeScreen(),
@@ -67,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Future.delayed(
         const Duration(seconds: 3),
         () {
-          Navigator.push(
+          Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => const TabBarScreen(),
