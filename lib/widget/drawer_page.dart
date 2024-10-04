@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 import 'package:diamond_app/progress_loader/progress_loader.dart';
 import 'package:firebase_auth/firebase_auth.dart';
->>>>>>> 4f1f1556c83e6336d188e9bd3d81a5bbc3fc3c7d
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:diamond_app/Home/exclusive_screen.dart';
