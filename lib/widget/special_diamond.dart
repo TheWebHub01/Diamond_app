@@ -23,13 +23,14 @@ class _SpecialDiamondState extends State<SpecialDiamond> {
           child: GestureDetector(
             onTap: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SpicalDiamondDetailsScreen(
-                      itemData: datacontroller.diamonds[index],
-                      next: true,
-                    ),
-                  ));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SpicalDiamondDetailsScreen(
+                    itemData: datacontroller.diamonds[index],
+                    next: true,
+                  ),
+                ),
+              );
             },
             child: Container(
               height: 80,

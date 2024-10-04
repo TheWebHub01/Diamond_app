@@ -4,6 +4,7 @@ import 'package:sizer/sizer.dart';
 class CustomAppBar extends StatelessWidget {
   final String title;
   final String? image;
+  final String? icon;
   final bool showActionButton;
   void Function()? onTap;
   void Function()? backOnTap;
@@ -16,21 +17,27 @@ class CustomAppBar extends StatelessWidget {
       this.onTap,
       this.image,
       this.backOnTap,
-      this.color});
+      this.color,
+      this.icon});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: color,
-      padding: const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 20),
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
       child: SafeArea(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             GestureDetector(
               onTap: backOnTap,
-              child: Image.asset("assets/images/Frame.png",
+              child: Image.asset(
+                  icon == null
+                      ? "assets/images/Frame.png"
+                      : "assets/images/menu.png",
                   height: 25,
+                  width: 25,
                   color: color != null ? Colors.white : Colors.black),
             ),
             Text(

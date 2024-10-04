@@ -1,5 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:diamond_app/Home/searche_screen.dart';
+import 'package:diamond_app/Home/searched_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
@@ -156,9 +156,9 @@ class _SearchBottomNavigationScreenState
   }
 
   final List<Widget> _screens = [
-    const SearchScreen(),
-    const SearchScreen(),
-    const SearchScreen(),
+    const SearchedScreen(),
+    const SearchedScreen(),
+    const SearchedScreen(),
   ];
 
   @override

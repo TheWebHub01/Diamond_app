@@ -206,9 +206,9 @@ class _NewArrivalScreenState extends State<NewArrivalScreen> {
                       ),
                       child: const Center(
                           child: Text(
-                            "Done",
-                            style: TextStyle(color: Colors.white),
-                          )),
+                        "Done",
+                        style: TextStyle(color: Colors.white),
+                      )),
                     ),
                   ),
                 ],
@@ -287,117 +287,101 @@ class _NewArrivalScreenState extends State<NewArrivalScreen> {
             SizedBox(
               height: 60.h,
               child: Obx(
-                    () =>
-                (datacontroller.filterDatalist.isEmpty)
+                () => (datacontroller.filterDatalist.isEmpty)
                     ? const Center(
-                    child: Text(
-                      "No\n New Arrival Result Found",
-                      textAlign: TextAlign.center,
-                      style:
-                      TextStyle(color: Color(0xff929292), fontSize: 22),
-                    ))
+                        child: Text(
+                        "No\n New Arrival Result Found",
+                        textAlign: TextAlign.center,
+                        style:
+                            TextStyle(color: Color(0xff929292), fontSize: 22),
+                      ))
                     : ListView.builder(
-                  itemCount: datacontroller.filterDatalist.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  NewArrivalDetailsScreen(
-                                      next: false,
-                                      itemData: datacontroller
-                                          .filterDatalist[index]),
-                            ));
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8.0,
-                        ),
-                        child: Container(
-                          height: 13.h,
-                          width: double.infinity,
-                          color: const Color(0xffA47842).withOpacity(0.2),
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                      "${datacontroller
-                                          .filterDatalist[index]['stage']}"),
-                                  SizedBox(
-                                      height: 40,
-                                      child: Image.asset(
-                                          "${datacontroller
-                                              .filterDatalist[index]['images']}")),
-                                  Text(
-                                      "${datacontroller
-                                          .filterDatalist[index]['imName']}"),
-                                ],
+                        itemCount: datacontroller.filterDatalist.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        NewArrivalDetailsScreen(
+                                            next: false,
+                                            itemData: datacontroller
+                                                .filterDatalist[index]),
+                                  ));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                top: 8.0,
                               ),
-                              Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                      "${datacontroller
-                                          .filterDatalist[index]['clarity']}"),
-                                  Text(
-                                      "FIN : ${datacontroller
-                                          .filterDatalist[index]['cut']} ${datacontroller
-                                          .filterDatalist[index]['Finish']}"),
-                                  Text(
-                                      "FLOU : ${datacontroller
-                                          .filterDatalist[index]['symmetry']}"),
-                                  Text(
-                                      "${datacontroller
-                                          .filterDatalist[index]['location']} ${datacontroller
-                                          .filterDatalist[index]['lab']}"),
-                                ],
+                              child: Container(
+                                height: 13.h,
+                                width: double.infinity,
+                                color: const Color(0xffA47842).withOpacity(0.2),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                            "${datacontroller.filterDatalist[index]['stage']}"),
+                                        SizedBox(
+                                            height: 40,
+                                            child: Image.asset(
+                                                "${datacontroller.filterDatalist[index]['images']}")),
+                                        Text(
+                                            "${datacontroller.filterDatalist[index]['imName']}"),
+                                      ],
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                            "${datacontroller.filterDatalist[index]['clarity']}"),
+                                        Text(
+                                            "FIN : ${datacontroller.filterDatalist[index]['cut']} ${datacontroller.filterDatalist[index]['Finish']}"),
+                                        Text(
+                                            "FLOU : ${datacontroller.filterDatalist[index]['symmetry']}"),
+                                        Text(
+                                            "${datacontroller.filterDatalist[index]['location']} ${datacontroller.filterDatalist[index]['lab']}"),
+                                      ],
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                            "Length :${datacontroller.filterDatalist[index]['lengh']} "),
+                                        Text(
+                                            "Width : ${datacontroller.filterDatalist[index]['width']}"),
+                                        Text(
+                                            "Depth : ${datacontroller.filterDatalist[index]['depth']}"),
+                                      ],
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                            "${datacontroller.filterDatalist[index]['ratio']}"),
+                                        Text(
+                                            "${datacontroller.filterDatalist[index]['price']}"),
+                                        Text(
+                                            "${datacontroller.filterDatalist[index]['crown']}"),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                      "Length :${datacontroller
-                                          .filterDatalist[index]['lengh']} "),
-                                  Text(
-                                      "Width : ${datacontroller
-                                          .filterDatalist[index]['width']}"),
-                                  Text(
-                                      "Depth : ${datacontroller
-                                          .filterDatalist[index]['depth']}"),
-                                ],
-                              ),
-                              Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                      "${datacontroller
-                                          .filterDatalist[index]['ratio']}"),
-                                  Text(
-                                      "${datacontroller
-                                          .filterDatalist[index]['price']}"),
-                                  Text(
-                                      "${datacontroller
-                                          .filterDatalist[index]['crown']}"),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ),
             ),
           ],
@@ -412,10 +396,11 @@ class SortOption extends StatefulWidget {
   final Function(String) onToggle;
   final List<String> selectedFilters;
 
-
-  const SortOption(this.text,
-      this.onToggle,
-      this.selectedFilters,);
+  const SortOption(
+    this.text,
+    this.onToggle,
+    this.selectedFilters,
+  );
 
   @override
   State<SortOption> createState() => _SortOptionState();
@@ -434,8 +419,9 @@ class _SortOptionState extends State<SortOption> {
         //   onChanged: (_) => onToggle(text),
         // ),
         ListTile(
-          leading:
-          widget.selectedFilters.isNotEmpty ? const Icon(Icons.add) : const Icon(Icons.add),
+          leading: widget.selectedFilters.isNotEmpty
+              ? const Icon(Icons.add)
+              : const Icon(Icons.add),
           title: Text(widget.text),
           onTap: () => widget.onToggle(widget.text),
         ),

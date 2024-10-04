@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:diamond_app/Home/exclusive_screen.dart';
@@ -237,11 +236,15 @@ class _DrawerPageState extends State<DrawerPage> {
                     ),
                   ));
             },
-            child: const SizedBox(
+            child: SizedBox(
               height: 40,
               child: ListTile(
-                // leading: Icon(Icons.),
-                title: Text("My Offer List"),
+                leading: Image.asset(
+                  "assets/images/offer1.png",
+                  height: 15,
+                  width: 15,
+                ),
+                title: const Text("My Offer List"),
               ),
             ),
           ),

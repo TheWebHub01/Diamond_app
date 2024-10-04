@@ -97,7 +97,7 @@ class _FilterDrawerState extends State<FilterDrawer> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Sort By',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
@@ -313,11 +313,11 @@ class SortOption extends StatelessWidget {
         //   onChanged: (_) => onToggle(text),
         // ),
         ListTile(
-          leading: isLoading ? Icon(Icons.add) : Icon(Icons.add),
+          leading: isLoading ? const Icon(Icons.add) : const Icon(Icons.add),
           title: Text(text),
           onTap: () => onToggle(text),
         ),
-        Divider(),
+        const Divider(),
       ],
     );
   }

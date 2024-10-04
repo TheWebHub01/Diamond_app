@@ -91,6 +91,7 @@ class _HomeContainerState extends State<HomeContainer> {
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: Colors.grey)),
         child: GridView.builder(
+          physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.only(top: 20),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3),
