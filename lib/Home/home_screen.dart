@@ -6,6 +6,7 @@ import 'package:diamond_app/widget/special_diamond.dart';
 import 'package:flutter/material.dart';
 
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,6 +20,24 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   var scaffoldkey = GlobalKey<ScaffoldState>();
+  Future<void> _openWhatsApp() async {
+    String url = "https://wa.me/918320672006}";
+
+    try {
+      Uri whatsappUri = Uri.parse(url);
+
+      if (await canLaunchUrl(whatsappUri)) {
+        await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
+      } else {
+        // Fallback in case of error (e.g., WhatsApp not installed)
+        throw 'Could not launch WhatsApp. Please ensure WhatsApp is installed.';
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +69,10 @@ class _HomeScreenState extends State<HomeScreen> {
           Center(
             child: Stack(children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 12.w,
+                  vertical: 16.h,
+                ),
                 decoration: const BoxDecoration(
                   color: Color(0xffA47842),
                   borderRadius: BorderRadius.only(
@@ -132,8 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         "assets/images/skypay.png")),
                               ),
                               GestureDetector(
-                                onTap: () => launchUrlString(
-                                    "https://wa.me/?text=Hey buddy, try this super cool new app!"),
+                                onTap: _openWhatsApp,
                                 child: SizedBox(
                                     height: 30,
                                     width: 30,
