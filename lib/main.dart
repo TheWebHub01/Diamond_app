@@ -16,8 +16,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ResponsiveSizer(
       builder: (p0, p1, p2) => MaterialApp(
-        theme: ThemeData(primaryColor: Colors.white),
         title: 'Flutter Demo',
+        theme: ThemeData(scaffoldBackgroundColor: Colors.white),
         debugShowCheckedModeBanner: false,
         home: const SplashScreen(),
       ),

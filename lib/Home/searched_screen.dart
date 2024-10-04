@@ -1,9 +1,9 @@
-import 'dart:async';
 import 'package:diamond_app/Home/demand_screen.dart';
 import 'package:diamond_app/Home/select_shape_screen.dart';
-import 'package:diamond_app/utiles/data_controller.dart';
 import 'package:diamond_app/utiles/database_helper.dart';
+import 'package:diamond_app/utiles/search_controller.dart';
 import 'package:diamond_app/widget/custom_app_bar.dart';
+import 'package:diamond_app/widget/static_data.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
@@ -16,250 +16,17 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  ControllerSearch searchController = Get.put(ControllerSearch());
   final List<String> _temporarySelectedRanges = [];
   List<String> _appliedSelectedRanges = [];
 
   void _applySelections() {
     setState(() {
       _appliedSelectedRanges = List.from(_temporarySelectedRanges);
-      _rangeController.text = _appliedSelectedRanges.join(', ');
+      searchController.rangeController.text = _appliedSelectedRanges.join(', ');
       Navigator.pop(context);
     });
   }
-
-  ///finish
-  List finishList = [
-    "3EX",
-    "EX",
-    "VG+",
-    "VG-",
-  ];
-  List<bool> isFinishSelected = [false, false, false, false];
-  late String isFinishSelectedList;
-
-  ///cut
-  List cutList = [
-    "IDEAL",
-    "EX",
-    "VG",
-    "GD",
-    "GD",
-  ];
-  List<bool> isCutSelected = [false, false, false, false, false];
-  late String isCutSelectedList;
-
-  ///symmetry
-  List symmetryList = [
-    "EX",
-    "VG",
-    "GD",
-    "FR",
-  ];
-  List<bool> isSymmetrySelected = [false, false, false, false];
-  late String isSymmetrySelectedList;
-
-  ///lab
-  List labList = [
-    "GIA",
-    "IGI",
-    "NO-CERT",
-    "Other",
-  ];
-  List<bool> isLabSelected = [false, false, false, false];
-  late String isLabSelectedList;
-
-  ///location
-  List locationList = ["Surat"];
-  List<bool> isLocationSelected = [false];
-  late String isLocationSelectedList;
-
-  ///shades
-  List shadesList = [
-    "NO BGM",
-    "Brown",
-    "BLACK",
-    "MIX TINCH",
-  ];
-  List<bool> isShadesSelected = [false, false, false, false];
-  late String isShadesSelectedList;
-
-  ///h&A
-  List handaList = [
-    "EX",
-    "VG",
-    "GD",
-  ];
-  List<bool> isHandASelected = [
-    false,
-    false,
-    false,
-  ];
-  late String isHandSelectedList;
-
-  ///
-  int s = 0;
-  int c = 0;
-  final TextEditingController _rangeController = TextEditingController();
-
-  ///Stage
-  List stageList = ["All", "Available", "New", "Hold", "Price Revised", "Memo"];
-  List<bool> isStageSelected = [false, false, false, false, false, false];
-  late String isStageSelectedList;
-
-  /// Color
-  List colorList = [
-    "D",
-    "E",
-    "F",
-    "G",
-    "H",
-    "I",
-    "J",
-    "K",
-    "L",
-    "M",
-    "N",
-    "O-P",
-    "Q",
-    "Fancy"
-  ];
-  List<bool> isColorChecked = [
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false
-  ];
-  late String isColorCheckedList;
-
-  ///clarity
-  List clarityList = [
-    "FL",
-    "IF",
-    "VVS1",
-    "VVS2",
-    "VS1",
-    "VS2",
-  ];
-  List<bool> isClaritySelected = [false, false, false, false, false, false];
-  late String isClaritySelectedList;
-  List<String> diamondShapes = [
-    "Asscher",
-    "Cushion",
-    "Emerald",
-    "Heart",
-    "Marquise",
-    "Oval",
-    "Pear",
-    "Princess",
-    "Radiant",
-    "Round",
-  ];
-
-  List<String> diamondSelectedShapes = [
-    "assets/images/asscher.png",
-    "assets/images/cushion.png",
-    "assets/images/emerald.png",
-    "assets/images/heart.png",
-    "assets/images/marquise.png",
-    "assets/images/oval.png",
-    "assets/images/pear.png",
-    "assets/images/princ.png",
-    "assets/images/radiant.png",
-    "assets/images/round.png"
-  ];
-
-  List<int> selectedIndices = [];
-  late String selectedDiamond;
-
-  ///Certificate
-  TextEditingController txtCert = TextEditingController();
-  TextEditingController txtcer = TextEditingController();
-
-  ///price
-  List priceList = [
-    "\$/CTS",
-    "DISC%",
-    "\$ TOTAL",
-  ];
-  List<bool> isPriceSelected = [false, false, false];
-  late String isPriceSelectedList;
-  Datacontroller datacontroller = Get.put(Datacontroller());
-
-  ///Alert Dialog
-  var txtName = TextEditingController();
-  final List<Map<String, String>> combinedDiamondData = [];
-  late int lastSelectedIndex;
-
-  Future<void> insertSelectedData() async {
-    DbHelper.helper.insertData(
-      imName: diamondShapes[lastSelectedIndex],
-      images: diamondSelectedShapes[lastSelectedIndex],
-      lab: isLabSelectedList,
-      stage: isStageSelectedList,
-      color: isColorCheckedList,
-      clarity: isClaritySelectedList,
-      finish: isFinishSelectedList,
-      cut: isCutSelectedList,
-      symmetry: isSymmetrySelectedList,
-      location: isLocationSelectedList,
-      certiNo: txtcer.text,
-      shades: isShadesSelectedList,
-      handA: isHandSelectedList,
-      price:
-          "\$${datacontroller.txtpfrom.text}.${datacontroller.txtpto.text} $isPriceSelectedList",
-      tab: "${datacontroller.txtFromT.text}.${datacontroller.txtToT.text}",
-      depth: "${datacontroller.txtFromD.text}.${datacontroller.txtToD.text}",
-      lengh: "${datacontroller.txtFromL.text}.${datacontroller.txtToL.text}",
-      width: "${datacontroller.txtFromW.text}.${datacontroller.txtToW.text}",
-      ratio: "${datacontroller.txtFromR.text}.${datacontroller.txtToR.text}",
-      crown: "\$ ${datacontroller.txtFromC.text}.${datacontroller.txtToC.text}",
-      height: "${datacontroller.txtFromH.text}.${datacontroller.txtToH.text}",
-      crownAngle:
-          "${datacontroller.txtFromCA.text}.${datacontroller.txtToCA.text}",
-      pavDepth:
-          "${datacontroller.txtFromPD.text}.${datacontroller.txtToPD.text}",
-      pavAngle:
-          "${datacontroller.txtFromPA.text}.${datacontroller.txtToPA.text}",
-    );
-  }
-
-  List<String> ranges = [
-    'Select All',
-    '0.01-0.29',
-    '0.30-0.39',
-    '0.40-0.49',
-    '0.50-0.59',
-    '0.60-0.69',
-    '0.70-0.79',
-    '0.80-0.89',
-    '0.90-0.99',
-    '1.00-1.10',
-    '1.11-1.49',
-    '1.50-1.60',
-    '1.61-1.99',
-    '2.00-2.10',
-    '2.11-2.49',
-    '2.50-2.60',
-    '2.61-2.99',
-    '3.00-3.10',
-    '3.11-3.49',
-    '3.50-3.60',
-    '3.61-3.99',
-    '4.00-4.99',
-    '5.00-5.99',
-    '6.00-9.99',
-    '10.00-20.00',
-  ];
 
   @override
   void initState() {
@@ -270,21 +37,24 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: const Color(0xffA47842),
-            child: const Icon(
-              Icons.search_sharp,
-              color: Colors.white,
-            ),
-            onPressed: () async {
-              await insertSelectedData();
-            },
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: const Color(0xffA47842),
+          child: const Icon(
+            Icons.search_sharp,
+            color: Colors.white,
           ),
-          body: Padding(
+          onPressed: () async {
+            await searchController.insertSelectedData();
+          },
+        ),
+        body: GestureDetector(
+          onTap: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
+          child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,34 +145,41 @@ class _SearchScreenState extends State<SearchScreen> {
                                 height: 60,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: stageList.length,
+                                  itemCount: searchController.stageList.length,
                                   itemBuilder: (context, s) {
                                     return Padding(
                                       padding: const EdgeInsets.all(5),
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            isStageSelectedList = stageList[s];
-                                            isStageSelected[s] =
-                                                !isStageSelected[s];
+                                            searchController
+                                                    .isStageSelectedList =
+                                                searchController.stageList[s];
+                                            searchController
+                                                    .isStageSelected[s] =
+                                                !searchController
+                                                    .isStageSelected[s];
                                           });
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
                                               border: Border.all(
-                                                  color: isStageSelected[s]
+                                                  color: searchController
+                                                          .isStageSelected[s]
                                                       ? const Color(0xffA47842)
                                                       : Colors.grey),
                                               borderRadius:
                                                   BorderRadius.circular(10),
-                                              color: isStageSelected[s]
+                                              color: searchController
+                                                      .isStageSelected[s]
                                                   ? const Color(0xffA47842)
                                                   : Colors.white),
                                           padding: const EdgeInsets.all(15),
                                           child: Text(
-                                            stageList[s],
+                                            searchController.stageList[s],
                                             style: TextStyle(
-                                                color: isStageSelected[s]
+                                                color: searchController
+                                                        .isStageSelected[s]
                                                     ? Colors.white
                                                     : Colors.grey),
                                           ),
@@ -454,8 +231,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                     ]),
                               ),
 
-                              SizedBox(
-                                height: 205,
+                              Container(
+                                height: 215,
                                 child: GridView.builder(
                                   physics: const NeverScrollableScrollPhysics(),
                                   gridDelegate:
@@ -465,16 +242,21 @@ class _SearchScreenState extends State<SearchScreen> {
                                           mainAxisSpacing: 5,
                                           crossAxisCount: 5,
                                           mainAxisExtent: 90),
-                                  itemCount: diamondShapes.length,
+                                  itemCount:
+                                      searchController.diamondShapes.length,
                                   itemBuilder: (context, index) {
                                     return GestureDetector(
                                       onTap: () {
                                         setState(() {
-                                          if (selectedIndices.contains(index)) {
-                                            selectedIndices.remove(index);
+                                          if (searchController.selectedIndices
+                                              .contains(index)) {
+                                            searchController.selectedIndices
+                                                .remove(index);
                                           } else {
-                                            selectedIndices.add(index);
-                                            lastSelectedIndex = index;
+                                            searchController.selectedIndices
+                                                .add(index);
+                                            searchController.lastSelectedIndex =
+                                                index;
                                           }
                                         });
                                       },
@@ -489,7 +271,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 color: Colors.white,
                                                 shape: BoxShape.circle,
                                                 border: Border.all(
-                                                    color: selectedIndices
+                                                    color: searchController
+                                                            .selectedIndices
                                                             .contains(index)
                                                         ? const Color(
                                                             0xffA47842)
@@ -497,14 +280,19 @@ class _SearchScreenState extends State<SearchScreen> {
                                             child: Padding(
                                               padding: const EdgeInsets.all(15),
                                               child: Image.asset(
-                                                diamondSelectedShapes[index],
+                                                searchController
+                                                        .diamondSelectedShapes[
+                                                    index],
                                               ),
                                             ),
                                           ),
-                                          Text(diamondShapes[index],
+                                          Text(
+                                              searchController
+                                                  .diamondShapes[index],
                                               style: TextStyle(
                                                 fontSize: 11,
-                                                color: selectedIndices
+                                                color: searchController
+                                                        .selectedIndices
                                                         .contains(index)
                                                     ? const Color(0xffA47842)
                                                     : Colors.black,
@@ -516,10 +304,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ),
                               ),
 
-                              ///cateRange
+                              const SizedBox(height: 10),
 
+                              ///cateRange
                               TextFormField(
-                                controller: _rangeController,
+                                controller: searchController.rangeController,
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                     labelText: "Carat Range",
@@ -559,11 +348,15 @@ class _SearchScreenState extends State<SearchScreen> {
                                                                   mainAxisExtent:
                                                                       60),
                                                           itemCount:
-                                                              ranges.length,
+                                                              searchController
+                                                                  .ranges
+                                                                  .length,
                                                           itemBuilder:
                                                               (context, index) {
                                                             final range =
-                                                                ranges[index];
+                                                                searchController
+                                                                        .ranges[
+                                                                    index];
                                                             final isSelected =
                                                                 _temporarySelectedRanges
                                                                     .contains(
@@ -789,23 +582,27 @@ class _SearchScreenState extends State<SearchScreen> {
                                 height: 60,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: colorList.length,
+                                  itemCount: searchController.colorList.length,
                                   itemBuilder: (context, s) {
                                     return Padding(
                                       padding: const EdgeInsets.all(5),
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            isColorCheckedList = colorList[s];
-                                            isColorChecked[s] =
-                                                !isColorChecked[s];
+                                            searchController
+                                                    .isColorCheckedList =
+                                                searchController.colorList[s];
+                                            searchController.isColorChecked[s] =
+                                                !searchController
+                                                    .isColorChecked[s];
                                           });
                                         },
                                         child: Container(
                                           width: 55,
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            boxShadow: isColorChecked[s]
+                                            boxShadow: searchController
+                                                    .isColorChecked[s]
                                                 ? [
                                                     BoxShadow(
                                                         color: const Color(
@@ -815,17 +612,19 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   ]
                                                 : [],
                                             border: Border.all(
-                                                color: isColorChecked[s]
+                                                color: searchController
+                                                        .isColorChecked[s]
                                                     ? const Color(0xffA47842)
                                                     : Colors.grey),
                                             shape: BoxShape.circle,
                                           ),
                                           child: Center(
                                             child: Text(
-                                              colorList[s],
+                                              searchController.colorList[s],
                                               style: TextStyle(
                                                   fontSize: 14.sp,
-                                                  color: isColorChecked[s]
+                                                  color: searchController
+                                                          .isColorChecked[s]
                                                       ? const Color(0xffA47842)
                                                       : Colors.grey),
                                             ),
@@ -880,24 +679,30 @@ class _SearchScreenState extends State<SearchScreen> {
                                 height: 60,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: clarityList.length,
+                                  itemCount:
+                                      searchController.clarityList.length,
                                   itemBuilder: (context, s) {
                                     return Padding(
                                         padding: const EdgeInsets.all(5),
                                         child: GestureDetector(
                                           onTap: () {
                                             setState(() {
-                                              isClaritySelectedList =
-                                                  clarityList[s];
-                                              isClaritySelected[s] =
-                                                  !isClaritySelected[s];
+                                              searchController
+                                                      .isClaritySelectedList =
+                                                  searchController
+                                                      .clarityList[s];
+                                              searchController
+                                                      .isClaritySelected[s] =
+                                                  !searchController
+                                                      .isClaritySelected[s];
                                             });
                                           },
                                           child: Container(
                                             width: 55,
                                             decoration: BoxDecoration(
                                               color: Colors.white,
-                                              boxShadow: isClaritySelected[s]
+                                              boxShadow: searchController
+                                                      .isClaritySelected[s]
                                                   ? [
                                                       BoxShadow(
                                                           color: const Color(
@@ -907,19 +712,20 @@ class _SearchScreenState extends State<SearchScreen> {
                                                     ]
                                                   : [],
                                               border: Border.all(
-                                                  color: isClaritySelected[s]
+                                                  color: searchController
+                                                          .isClaritySelected[s]
                                                       ? const Color(0xffA47842)
                                                       : Colors.grey),
                                               shape: BoxShape.circle,
                                             ),
                                             child: Center(
                                               child: Text(
-                                                clarityList[s],
+                                                searchController.clarityList[s],
                                                 style: TextStyle(
                                                     fontSize: 14.sp,
-                                                    color: isClaritySelected[s]
-                                                        ? const Color(
-                                                            0xffA47842)
+                                                    color: searchController
+                                                            .isClaritySelected[s]
+                                                        ? const Color(0xffA47842)
                                                         : Colors.grey),
                                               ),
                                             ),
@@ -971,44 +777,52 @@ class _SearchScreenState extends State<SearchScreen> {
                                 height: 60,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: finishList.length,
+                                  itemCount: searchController.finishList.length,
                                   itemBuilder: (context, s) {
                                     return Padding(
                                       padding: const EdgeInsets.all(5),
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            isFinishSelectedList =
-                                                finishList[s];
-                                            isFinishSelected[s] =
-                                                !isFinishSelected[s];
+                                            searchController
+                                                    .isFinishSelectedList =
+                                                searchController.finishList[s];
+                                            searchController
+                                                    .isFinishSelected[s] =
+                                                !searchController
+                                                    .isFinishSelected[s];
                                           });
                                         },
                                         child: Container(
                                           width: 55,
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            boxShadow: isFinishSelected[s]
+                                            boxShadow: searchController
+                                                    .isFinishSelected[s]
                                                 ? [
                                                     BoxShadow(
                                                         color: const Color(
                                                                 0xffA47842)
-                                                            .withOpacity(0.2),
+                                                            .withOpacity(0.3),
+                                                        spreadRadius: 2,
+                                                        offset: Offset(0, 6),
                                                         blurRadius: 10)
                                                   ]
                                                 : [],
                                             border: Border.all(
-                                                color: isFinishSelected[s]
+                                                color: searchController
+                                                        .isFinishSelected[s]
                                                     ? const Color(0xffA47842)
                                                     : Colors.grey),
                                             shape: BoxShape.circle,
                                           ),
                                           child: Center(
                                             child: Text(
-                                              finishList[s],
+                                              searchController.finishList[s],
                                               style: TextStyle(
                                                   fontSize: 14.sp,
-                                                  color: isFinishSelected[s]
+                                                  color: searchController
+                                                          .isFinishSelected[s]
                                                       ? const Color(0xffA47842)
                                                       : Colors.grey),
                                             ),
@@ -1062,23 +876,26 @@ class _SearchScreenState extends State<SearchScreen> {
                                 height: 60,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: cutList.length,
+                                  itemCount: searchController.cutList.length,
                                   itemBuilder: (context, s) {
                                     return Padding(
                                       padding: const EdgeInsets.all(5),
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            isCutSelectedList = cutList[s];
-                                            isCutSelected[s] =
-                                                !isCutSelected[s];
+                                            searchController.isCutSelectedList =
+                                                searchController.cutList[s];
+                                            searchController.isCutSelected[s] =
+                                                !searchController
+                                                    .isCutSelected[s];
                                           });
                                         },
                                         child: Container(
                                           width: 55,
                                           decoration: BoxDecoration(
                                               color: Colors.white,
-                                              boxShadow: isCutSelected[s]
+                                              boxShadow: searchController
+                                                      .isCutSelected[s]
                                                   ? [
                                                       BoxShadow(
                                                           color: const Color(
@@ -1088,16 +905,18 @@ class _SearchScreenState extends State<SearchScreen> {
                                                     ]
                                                   : [],
                                               border: Border.all(
-                                                  color: isCutSelected[s]
+                                                  color: searchController
+                                                          .isCutSelected[s]
                                                       ? const Color(0xffA47842)
                                                       : Colors.grey),
                                               shape: BoxShape.circle),
                                           child: Center(
                                             child: Text(
-                                              cutList[s],
+                                              searchController.cutList[s],
                                               style: TextStyle(
                                                   fontSize: 14.sp,
-                                                  color: isCutSelected[s]
+                                                  color: searchController
+                                                          .isCutSelected[s]
                                                       ? const Color(0xffA47842)
                                                       : Colors.grey),
                                             ),
@@ -1152,24 +971,30 @@ class _SearchScreenState extends State<SearchScreen> {
                                 height: 60,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: symmetryList.length,
+                                  itemCount:
+                                      searchController.symmetryList.length,
                                   itemBuilder: (context, s) {
                                     return Padding(
                                       padding: const EdgeInsets.all(5),
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            isSymmetrySelectedList =
-                                                symmetryList[s];
-                                            isSymmetrySelected[s] =
-                                                !isSymmetrySelected[s];
+                                            searchController
+                                                    .isSymmetrySelectedList =
+                                                searchController
+                                                    .symmetryList[s];
+                                            searchController
+                                                    .isSymmetrySelected[s] =
+                                                !searchController
+                                                    .isSymmetrySelected[s];
                                           });
                                         },
                                         child: Container(
                                           width: 55,
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            boxShadow: isSymmetrySelected[s]
+                                            boxShadow: searchController
+                                                    .isSymmetrySelected[s]
                                                 ? [
                                                     BoxShadow(
                                                         color: const Color(
@@ -1179,17 +1004,19 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   ]
                                                 : [],
                                             border: Border.all(
-                                                color: isSymmetrySelected[s]
+                                                color: searchController
+                                                        .isSymmetrySelected[s]
                                                     ? const Color(0xffA47842)
                                                     : Colors.grey),
                                             shape: BoxShape.circle,
                                           ),
                                           child: Center(
                                             child: Text(
-                                              symmetryList[s],
+                                              searchController.symmetryList[s],
                                               style: TextStyle(
                                                   fontSize: 14.sp,
-                                                  color: isSymmetrySelected[s]
+                                                  color: searchController
+                                                          .isSymmetrySelected[s]
                                                       ? const Color(0xffA47842)
                                                       : Colors.grey),
                                             ),
@@ -1244,23 +1071,26 @@ class _SearchScreenState extends State<SearchScreen> {
                                 height: 65,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: labList.length,
+                                  itemCount: searchController.labList.length,
                                   itemBuilder: (context, s) {
                                     return Padding(
                                       padding: const EdgeInsets.all(5),
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            isLabSelectedList = labList[s];
-                                            isLabSelected[s] =
-                                                !isLabSelected[s];
+                                            searchController.isLabSelectedList =
+                                                searchController.labList[s];
+                                            searchController.isLabSelected[s] =
+                                                !searchController
+                                                    .isLabSelected[s];
                                           });
                                         },
                                         child: Container(
                                           width: 60,
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            boxShadow: isLabSelected[s]
+                                            boxShadow: searchController
+                                                    .isLabSelected[s]
                                                 ? [
                                                     BoxShadow(
                                                         color: const Color(
@@ -1270,17 +1100,19 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   ]
                                                 : [],
                                             border: Border.all(
-                                                color: isLabSelected[s]
+                                                color: searchController
+                                                        .isLabSelected[s]
                                                     ? const Color(0xffA47842)
                                                     : Colors.grey),
                                             shape: BoxShape.circle,
                                           ),
                                           child: Center(
                                             child: Text(
-                                              labList[s],
+                                              searchController.labList[s],
                                               style: TextStyle(
                                                   fontSize: 14.sp,
-                                                  color: isLabSelected[s]
+                                                  color: searchController
+                                                          .isLabSelected[s]
                                                       ? const Color(0xffA47842)
                                                       : Colors.grey),
                                             ),
@@ -1334,23 +1166,29 @@ class _SearchScreenState extends State<SearchScreen> {
                               SizedBox(
                                 height: 80,
                                 child: ListView.builder(
-                                  itemCount: locationList.length,
+                                  itemCount:
+                                      searchController.locationList.length,
                                   itemBuilder: (context, s) {
                                     return Padding(
                                       padding: const EdgeInsets.all(5),
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            isLocationSelectedList =
-                                                locationList[s];
-                                            isLocationSelected[s] =
-                                                !isLocationSelected[s];
+                                            searchController
+                                                    .isLocationSelectedList =
+                                                searchController
+                                                    .locationList[s];
+                                            searchController
+                                                    .isLocationSelected[s] =
+                                                !searchController
+                                                    .isLocationSelected[s];
                                           });
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
                                             border: Border.all(
-                                                color: isLocationSelected[s]
+                                                color: searchController
+                                                        .isLocationSelected[s]
                                                     ? const Color(0xffA47842)
                                                     : Colors.grey,
                                                 width: 2.0),
@@ -1358,7 +1196,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 BorderRadius.circular(8.0),
                                           ),
                                           child: ListTile(
-                                            selectedColor: isLocationSelected[s]
+                                            selectedColor: searchController
+                                                    .isLocationSelected[s]
                                                 ? const Color(0xffA47842)
                                                 : Colors.white,
                                             enabled: true,
@@ -1367,9 +1206,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                               height: 31,
                                             ),
                                             title: Text(
-                                              locationList[s],
+                                              searchController.locationList[s],
                                               style: TextStyle(
-                                                color: isLocationSelected[s]
+                                                color: searchController
+                                                        .isLocationSelected[s]
                                                     ? const Color(0xffA47842)
                                                     : Colors.grey,
                                               ),
@@ -1422,7 +1262,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                               SizedBox(height: 2.h),
                               TextFormField(
-                                controller: txtcer,
+                                controller: searchController.txtcer,
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                   focusedBorder: OutlineInputBorder(
@@ -1482,39 +1322,46 @@ class _SearchScreenState extends State<SearchScreen> {
                                 height: 50,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: shadesList.length,
+                                  itemCount: searchController.shadesList.length,
                                   itemBuilder: (context, s) {
                                     return Padding(
                                         padding: const EdgeInsets.all(5),
                                         child: GestureDetector(
                                           onTap: () {
                                             setState(() {
-                                              isShadesSelectedList =
-                                                  shadesList[s];
-                                              isShadesSelected[s] =
-                                                  !isShadesSelected[s];
+                                              searchController
+                                                      .isShadesSelectedList =
+                                                  searchController
+                                                      .shadesList[s];
+                                              searchController
+                                                      .isShadesSelected[s] =
+                                                  !searchController
+                                                      .isShadesSelected[s];
                                             });
                                           },
                                           child: Container(
                                             // width: 55,
                                             decoration: BoxDecoration(
                                                 border: Border.all(
-                                                    color: isShadesSelected[s]
+                                                    color: searchController
+                                                            .isShadesSelected[s]
                                                         ? const Color(
                                                             0xffA47842)
                                                         : Colors.grey),
                                                 borderRadius:
                                                     BorderRadius.circular(10),
-                                                color: isShadesSelected[s]
+                                                color: searchController
+                                                        .isShadesSelected[s]
                                                     ? const Color(0xffA47842)
                                                     : Colors.white),
                                             padding: const EdgeInsets.all(10),
                                             child: Center(
                                               child: Text(
-                                                shadesList[s],
+                                                searchController.shadesList[s],
                                                 style: TextStyle(
                                                     fontSize: 14.sp,
-                                                    color: isShadesSelected[s]
+                                                    color: searchController
+                                                            .isShadesSelected[s]
                                                         ? Colors.white
                                                         : Colors.grey),
                                               ),
@@ -1568,23 +1415,28 @@ class _SearchScreenState extends State<SearchScreen> {
                                 height: 60,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: handaList.length,
+                                  itemCount: searchController.handaList.length,
                                   itemBuilder: (context, s) {
                                     return Padding(
                                         padding: const EdgeInsets.all(5),
                                         child: GestureDetector(
                                           onTap: () {
                                             setState(() {
-                                              isHandSelectedList = handaList[s];
-                                              isHandASelected[s] =
-                                                  !isHandASelected[s];
+                                              searchController
+                                                      .isHandSelectedList =
+                                                  searchController.handaList[s];
+                                              searchController
+                                                      .isHandASelected[s] =
+                                                  !searchController
+                                                      .isHandASelected[s];
                                             });
                                           },
                                           child: Container(
                                             width: 55,
                                             decoration: BoxDecoration(
                                               color: Colors.white,
-                                              boxShadow: isHandASelected[s]
+                                              boxShadow: searchController
+                                                      .isHandASelected[s]
                                                   ? [
                                                       BoxShadow(
                                                           color: const Color(
@@ -1594,17 +1446,19 @@ class _SearchScreenState extends State<SearchScreen> {
                                                     ]
                                                   : [],
                                               border: Border.all(
-                                                  color: isHandASelected[s]
+                                                  color: searchController
+                                                          .isHandASelected[s]
                                                       ? const Color(0xffA47842)
                                                       : Colors.grey),
                                               shape: BoxShape.circle,
                                             ),
                                             child: Center(
                                               child: Text(
-                                                handaList[s],
+                                                searchController.handaList[s],
                                                 style: TextStyle(
                                                     fontSize: 14.sp,
-                                                    color: isHandASelected[s]
+                                                    color: searchController
+                                                            .isHandASelected[s]
                                                         ? const Color(
                                                             0xffA47842)
                                                         : Colors.grey),
@@ -1658,37 +1512,45 @@ class _SearchScreenState extends State<SearchScreen> {
                               SizedBox(
                                 height: 50,
                                 child: ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: priceList.length,
+                                  itemCount: searchController.priceList.length,
                                   itemBuilder: (context, s) {
                                     return Padding(
                                       padding: const EdgeInsets.all(5),
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            isPriceSelectedList = priceList[s];
-                                            isPriceSelected[s] =
-                                                !isPriceSelected[s];
+                                            searchController
+                                                    .isPriceSelectedList =
+                                                searchController.priceList[s];
+                                            searchController
+                                                    .isPriceSelected[s] =
+                                                !searchController
+                                                    .isPriceSelected[s];
                                           });
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
                                               border: Border.all(
-                                                  color: isPriceSelected[s]
+                                                  color: searchController
+                                                          .isPriceSelected[s]
                                                       ? const Color(0xffA47842)
                                                       : Colors.grey),
                                               borderRadius:
                                                   BorderRadius.circular(10),
-                                              color: isPriceSelected[s]
+                                              color: searchController
+                                                      .isPriceSelected[s]
                                                   ? const Color(0xffA47842)
                                                   : Colors.white),
                                           padding: const EdgeInsets.all(10),
                                           child: Center(
                                             child: Text(
-                                              priceList[s],
+                                              searchController.priceList[s],
                                               style: TextStyle(
                                                   fontSize: 14.sp,
-                                                  color: isPriceSelected[s]
+                                                  color: searchController
+                                                          .isPriceSelected[s]
                                                       ? Colors.white
                                                       : Colors.grey),
                                             ),
@@ -1699,7 +1561,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   },
                                 ),
                               ),
-                              staticData()
+                              StaticData()
                             ],
                           ),
                         ),
@@ -1745,439 +1607,6 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget staticData() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 1.h),
-        Row(
-          children: [
-            Expanded(
-                child: TextField(
-              keyboardType: TextInputType.number,
-              controller: datacontroller.txtpfrom,
-              decoration: InputDecoration(
-                labelText: "From",
-                labelStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            )),
-            const SizedBox(width: 10),
-            Expanded(
-                child: TextField(
-              keyboardType: TextInputType.number,
-              controller: datacontroller.txtpto,
-              decoration: InputDecoration(
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                labelText: "To",
-                labelStyle: const TextStyle(color: Colors.grey),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            ))
-          ],
-        ),
-        SizedBox(height: 1.h),
-        const Text(
-          "Table%",
-          style: TextStyle(color: Colors.grey),
-        ),
-        SizedBox(height: 1.h),
-        Row(
-          children: [
-            Expanded(
-                child: TextField(
-              keyboardType: TextInputType.number,
-              controller: datacontroller.txtFromT,
-              decoration: InputDecoration(
-                labelText: "From",
-                labelStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            )),
-            const SizedBox(width: 10),
-            Expanded(
-                child: TextField(
-              keyboardType: TextInputType.number,
-              controller: datacontroller.txtToT,
-              decoration: InputDecoration(
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                labelText: "To",
-                labelStyle: const TextStyle(color: Colors.grey),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            ))
-          ],
-        ),
-        SizedBox(height: 1.h),
-        const Text(
-          "Depth%",
-          style: TextStyle(color: Colors.grey),
-        ),
-        SizedBox(height: 1.h),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                keyboardType: TextInputType.number,
-                controller: datacontroller.txtFromD,
-                decoration: InputDecoration(
-                  labelText: "From",
-                  labelStyle: const TextStyle(color: Colors.grey),
-                  focusedBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      borderSide: BorderSide(color: Colors.grey)),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: TextField(
-                keyboardType: TextInputType.number,
-                controller: datacontroller.txtToD,
-                decoration: InputDecoration(
-                  focusedBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      borderSide: BorderSide(color: Colors.grey)),
-                  labelText: "To",
-                  labelStyle: const TextStyle(color: Colors.grey),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 1.h),
-        const Text(
-          "Lengh",
-          style: TextStyle(color: Colors.grey),
-        ),
-        SizedBox(height: 1.h),
-        Row(
-          children: [
-            Expanded(
-                child: TextField(
-              keyboardType: TextInputType.number,
-              controller: datacontroller.txtFromL,
-              decoration: InputDecoration(
-                labelText: "From",
-                labelStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            )),
-            const SizedBox(width: 10),
-            Expanded(
-                child: TextField(
-              keyboardType: TextInputType.number,
-              controller: datacontroller.txtToL,
-              decoration: InputDecoration(
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                labelText: "To",
-                labelStyle: const TextStyle(color: Colors.grey),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            ))
-          ],
-        ),
-        SizedBox(height: 1.h),
-        const Text(
-          "Width",
-          style: TextStyle(color: Colors.grey),
-        ),
-        SizedBox(height: 1.h),
-        Row(
-          children: [
-            Expanded(
-                child: TextField(
-              controller: datacontroller.txtFromW,
-              decoration: InputDecoration(
-                labelText: "From",
-                labelStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            )),
-            const SizedBox(width: 10),
-            Expanded(
-                child: TextField(
-              controller: datacontroller.txtToW,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                labelText: "To",
-                labelStyle: const TextStyle(color: Colors.grey),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            ))
-          ],
-        ),
-        SizedBox(height: 1.h),
-        const Text(
-          "Ratio",
-          style: TextStyle(color: Colors.grey),
-        ),
-        SizedBox(height: 1.h),
-        Row(
-          children: [
-            Expanded(
-                child: TextField(
-              controller: datacontroller.txtFromR,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: "From",
-                labelStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            )),
-            const SizedBox(width: 10),
-            Expanded(
-                child: TextField(
-              keyboardType: TextInputType.number,
-              controller: datacontroller.txtToR,
-              decoration: InputDecoration(
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                labelText: "To",
-                labelStyle: const TextStyle(color: Colors.grey),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            ))
-          ],
-        ),
-        SizedBox(height: 1.h),
-        const Text(
-          "Crown",
-          style: TextStyle(color: Colors.grey),
-        ),
-        SizedBox(height: 1.h),
-        Row(
-          children: [
-            Expanded(
-                child: TextField(
-              keyboardType: TextInputType.number,
-              controller: datacontroller.txtFromC,
-              decoration: InputDecoration(
-                labelText: "From",
-                labelStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            )),
-            const SizedBox(width: 10),
-            Expanded(
-                child: TextField(
-              keyboardType: TextInputType.number,
-              controller: datacontroller.txtToC,
-              decoration: InputDecoration(
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                labelText: "To",
-                labelStyle: const TextStyle(color: Colors.grey),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            ))
-          ],
-        ),
-        SizedBox(height: 1.h),
-        const Text(
-          "Height",
-          style: TextStyle(color: Colors.grey),
-        ),
-        SizedBox(height: 1.h),
-        Row(
-          children: [
-            Expanded(
-                child: TextField(
-              controller: datacontroller.txtFromH,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: "From",
-                labelStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            )),
-            const SizedBox(width: 10),
-            Expanded(
-                child: TextField(
-              controller: datacontroller.txtToH,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                labelText: "To",
-                labelStyle: const TextStyle(color: Colors.grey),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            ))
-          ],
-        ),
-        SizedBox(height: 1.h),
-        const Text(
-          "Crown Angle",
-          style: TextStyle(color: Colors.grey),
-        ),
-        SizedBox(height: 1.h),
-        Row(
-          children: [
-            Expanded(
-                child: TextField(
-              controller: datacontroller.txtFromCA,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: "From",
-                labelStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            )),
-            const SizedBox(width: 10),
-            Expanded(
-                child: TextField(
-              controller: datacontroller.txtToCA,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                labelText: "To",
-                labelStyle: const TextStyle(color: Colors.grey),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            ))
-          ],
-        ),
-        SizedBox(height: 1.h),
-        const Text(
-          "Pav Depth",
-          style: TextStyle(color: Colors.grey),
-        ),
-        SizedBox(height: 1.h),
-        Row(
-          children: [
-            Expanded(
-                child: TextField(
-              controller: datacontroller.txtFromPD,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: "From",
-                labelStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            )),
-            const SizedBox(width: 10),
-            Expanded(
-                child: TextField(
-              controller: datacontroller.txtToPD,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                labelText: "To",
-                labelStyle: const TextStyle(color: Colors.grey),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            ))
-          ],
-        ),
-        SizedBox(height: 1.h),
-        const Text(
-          "Pav Angle",
-          style: TextStyle(color: Colors.grey),
-        ),
-        SizedBox(height: 1.h),
-        Row(
-          children: [
-            Expanded(
-                child: TextField(
-              controller: datacontroller.txtFromPA,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: "From",
-                labelStyle: const TextStyle(color: Colors.grey),
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            )),
-            const SizedBox(width: 10),
-            Expanded(
-                child: TextField(
-              controller: datacontroller.txtToPA,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.grey)),
-                labelText: "To",
-                labelStyle: const TextStyle(color: Colors.grey),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            ))
-          ],
-        ),
-      ],
     );
   }
 }
