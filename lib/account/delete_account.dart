@@ -40,7 +40,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
         const Text("User Name", style: TextStyle(color: Color(0xff909090))),
         const SizedBox(height: 6),
         deleteaccountWidget(txtUserName.text),
-        SizedBox(
+        const SizedBox(
           height: 15,
         ),
         deleteaccountWidget(txtEmail.text),
@@ -93,11 +93,11 @@ class _DeleteAccountState extends State<DeleteAccount> {
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
+                        const Text(
                           "Delete",
-                          style: const TextStyle(fontSize: 25),
+                          style: TextStyle(fontSize: 25),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         const Text(
@@ -168,25 +168,9 @@ class _DeleteAccountState extends State<DeleteAccount> {
               ),
             ),
           ),
-           SizedBox(height: 30),
-          Center(
-            child: GestureDetector(
-              onTap: _deleteAccount,
-              child: Container(
-                height: 60,
-                width: 390,
-                decoration: BoxDecoration(
-                    color: const Color(0xffA47842),
-                    borderRadius: BorderRadius.circular(13)),
-                child: const Center(
-                  child: Text("Done",
-                      style: TextStyle(fontSize: 20, color: Color(0xffFFFFFF))),
-                
-            
-          
-        
-      ),
-       ))))] );
+        ),
+      ],
+    );
   }
 
   Container deleteaccountWidget(String name) {
@@ -197,16 +181,16 @@ class _DeleteAccountState extends State<DeleteAccount> {
           border: Border.all(color: const Color(0xffBBBBBB))),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.person_4_outlined,
             color: Color(0xff909090),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Text(
             name,
-            style: TextStyle(color: Color(0xff909090), fontSize: 17),
+            style: const TextStyle(color: Color(0xff909090), fontSize: 17),
           )
         ],
       ),

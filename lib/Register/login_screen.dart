@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:diamond_app/Home/home_screen.dart';
+import 'package:diamond_app/Home/product_page.dart';
 import 'package:diamond_app/Register/forgot_password.dart';
 import 'package:diamond_app/progress_loader/progress_loader.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -72,6 +73,7 @@ class _SignInScreenState extends State<SignInScreen> {
           await prefs.setString('name', name);
           await prefs.setString('address', address);
           await prefs.setString('mobile', mobile);
+          await prefs.setString('userid', userCredential.user!.uid);
           print("=== hello ===");
           // Navigate to the home screen
           await Navigator.pushReplacement(

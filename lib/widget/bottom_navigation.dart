@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class BottamnavBar extends StatefulWidget {
+
+  
    List screens = [];
 
    BottamnavBar({super.key,required this.screens});

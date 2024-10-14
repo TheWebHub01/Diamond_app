@@ -1,4 +1,4 @@
-import 'package:diamond_app/Home/new_arrival_details_screen.dart';
+import 'package:diamond_app/Home/diamond_details_screen.dart';
 import 'package:diamond_app/utiles/data_controller.dart';
 import 'package:diamond_app/widget/custom_app_bar.dart';
 import 'package:diamond_app/widget/filter_drawer.dart';
@@ -107,7 +107,7 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          NewArrivalDetailsScreen(
+                                          DiamondDetailsScreen(
                                               next: true,
                                               itemData: datacontroller
                                                   .upcommingDatalist[index]),

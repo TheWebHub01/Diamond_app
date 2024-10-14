@@ -1,6 +1,8 @@
+import 'package:diamond_app/Home/daimondList_screen.dart';
 import 'package:diamond_app/Home/demand_screen.dart';
 import 'package:diamond_app/Home/search_screen.dart';
 import 'package:diamond_app/Home/select_shape_screen.dart';
+import 'package:diamond_app/progress_loader/progress_loader.dart';
 import 'package:diamond_app/utiles/database_helper.dart';
 import 'package:diamond_app/utiles/search_controller.dart';
 import 'package:diamond_app/widget/custom_app_bar.dart';
@@ -24,8 +26,34 @@ class _SearchedScreenState extends State<SearchedScreen> {
     DbHelper.helper.initDB();
   }
 
+  Future<void> _performSearch() async {
+    setState(() {});
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MyDiamondScreen(
+          selectedShape: searchController.selectedShapes,
+          selectedStatus: searchController.isStageSelectedList,
+          selectedColor: searchController.selectedColors,
+          selectedClarity: searchController.selectedclarities,
+          selectedCut: searchController.selectedCut,
+          selectRange: searchController.temporarySelectedRanges,
+          selectdepth:
+              '${searchController.datacontroller.txtFromD.text}.${searchController.datacontroller.txtToD.text}',
+          selectedPolish: searchController.selectedPolish,
+          selectedSymmetry: searchController.selectedSymmetry,
+          selectLab: searchController.selectedLabs,
+        ),
+      ),
+    );
+    // print("searchController.averageValue==>${searchController.averageValue}");
+  }
+
   @override
   Widget build(BuildContext context) {
+    ProgressLoader pl = ProgressLoader(context, isDismissible: true);
+
+    // print("searchController.averageValue==>${searchController.averageValue}");
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -36,7 +64,9 @@ class _SearchedScreenState extends State<SearchedScreen> {
             color: Colors.white,
           ),
           onPressed: () async {
-            await searchController.insertSelectedData();
+            pl.show();
+            await _performSearch();
+            pl.hide();
           },
         ),
         body: GestureDetector(
@@ -82,43 +112,15 @@ class _SearchedScreenState extends State<SearchedScreen> {
                     ],
                   ),
                 ),
-
                 const Expanded(
                   child: TabBarView(
-                    children: [SearchScreen(), SavedScreen(), DemandScreen()],
+                    children: [
+                      SearchScreen(),
+                      SavedScreen(),
+                      DemandScreen(),
+                    ],
                   ),
                 ),
-
-                /// Insert, demand, Save
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //   children: [
-                //     ElevatedButton(
-                //         onPressed: () async {
-                //           await insertSelectedData();
-                //         },
-                //         child: const Text("Insert")),
-                //     ElevatedButton(
-                //         onPressed: () {
-                //           Navigator.push(
-                //             context,
-                //             MaterialPageRoute(
-                //               builder: (context) => SelectedShapesScreen(
-                //                 selectedIndices: selectedIndices,
-                //                 diamondShapes: diamondShapes,
-                //                 diamondSelectedShapes: diamondSelectedShapes,
-                //               ),
-                //             ),
-                //           );
-                //         },
-                //         child: const Text("demand")),
-                //     ElevatedButton(
-                //         onPressed: () async {
-                //           await insertSelectedData();
-                //         },
-                //         child: const Text("Save")),
-                //   ],
-                // )
               ],
             ),
           ),

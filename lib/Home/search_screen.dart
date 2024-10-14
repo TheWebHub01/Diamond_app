@@ -14,13 +14,26 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   ControllerSearch searchController = Get.put(ControllerSearch());
-  final List<String> _temporarySelectedRanges = [];
-  List<String> _appliedSelectedRanges = [];
+  void _updateRangesFromText() {
+    setState(() {
+      // Split the text by commas and trim whitespace
+      searchController.temporarySelectedRanges = searchController
+          .rangeController.text
+          .split(',')
+          .map((e) => e.trim())
+          .toList();
+      // Remove any empty strings from the list
+      searchController.temporarySelectedRanges
+          .removeWhere((range) => range.isEmpty);
+    });
+  }
 
   void _applySelections() {
     setState(() {
-      _appliedSelectedRanges = List.from(_temporarySelectedRanges);
-      searchController.rangeController.text = _appliedSelectedRanges.join(', ');
+      searchController.appliedSelectedRanges =
+          List.from(searchController.temporarySelectedRanges);
+      searchController.rangeController.text =
+          searchController.appliedSelectedRanges.join(', ');
       Navigator.pop(context);
     });
   }
@@ -34,7 +47,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
       switch (finish) {
         case "3EX":
-          searchController.selectedCut = ["IDEAL", "EX"];
+          searchController.selectedCut = ["ID", "EX"];
           searchController.selectedSymmetry = ["EX"];
           searchController.selectedPolish = ["EX"];
           break;
@@ -44,7 +57,7 @@ class _SearchScreenState extends State<SearchScreen> {
           searchController.selectedPolish = ["EX", "VG"];
           break;
         case "VG+":
-          searchController.selectedCut = ["IDEAL", "EX", "VG"];
+          searchController.selectedCut = ["ID", "EX", "VG"];
           searchController.selectedSymmetry = ["EX", "VG"];
           searchController.selectedPolish = ["EX", "VG"];
           break;
@@ -105,34 +118,43 @@ class _SearchScreenState extends State<SearchScreen> {
                 scrollDirection: Axis.horizontal,
                 itemCount: searchController.stageList.length,
                 itemBuilder: (context, s) {
+                  String stage = searchController.stageList[s];
+                  bool isSelected =
+                      searchController.isStageSelectedList.contains(stage);
+
                   return Padding(
                     padding: const EdgeInsets.all(5),
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
-                          searchController.isStageSelectedList =
-                              searchController.stageList[s];
-                          searchController.isStageSelected[s] =
-                              !searchController.isStageSelected[s];
+                          if (isSelected) {
+                            searchController.isStageSelectedList.remove(stage);
+                          } else {
+                            searchController.isStageSelectedList.add(stage);
+
+                            print(
+                                "searchController.isStageSelectedList:=>${searchController.isStageSelectedList}");
+                          }
                         });
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                color: searchController.isStageSelected[s]
-                                    ? const Color(0xffA47842)
-                                    : Colors.grey),
-                            borderRadius: BorderRadius.circular(10),
-                            color: searchController.isStageSelected[s]
+                          border: Border.all(
+                            color: isSelected
                                 ? const Color(0xffA47842)
-                                : Colors.white),
+                                : Colors.grey,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                          color: isSelected
+                              ? const Color(0xffA47842)
+                              : Colors.white,
+                        ),
                         padding: const EdgeInsets.all(15),
                         child: Text(
-                          searchController.stageList[s],
+                          stage,
                           style: TextStyle(
-                              color: searchController.isStageSelected[s]
-                                  ? Colors.white
-                                  : Colors.grey),
+                            color: isSelected ? Colors.white : Colors.grey,
+                          ),
                         ),
                       ),
                     ),
@@ -183,21 +205,25 @@ class _SearchScreenState extends State<SearchScreen> {
               child: GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 1.5,
-                    crossAxisSpacing: 5,
-                    mainAxisSpacing: 5,
-                    crossAxisCount: 5,
-                    mainAxisExtent: 90),
+                  childAspectRatio: 2.0,
+                  crossAxisSpacing: 2,
+                  mainAxisSpacing: 2,
+                  crossAxisCount: 5,
+                  mainAxisExtent: 90,
+                ),
                 itemCount: searchController.diamondShapes.length,
                 itemBuilder: (context, index) {
+                  String diamondShape = searchController.diamondShapes[index];
+                  bool isSelected =
+                      searchController.selectedShapes.contains(diamondShape);
+
                   return GestureDetector(
                     onTap: () {
                       setState(() {
-                        if (searchController.selectedIndices.contains(index)) {
-                          searchController.selectedIndices.remove(index);
+                        if (isSelected) {
+                          searchController.selectedShapes.remove(diamondShape);
                         } else {
-                          searchController.selectedIndices.add(index);
-                          searchController.lastSelectedIndex = index;
+                          searchController.selectedShapes.add(diamondShape);
                         }
                       });
                     },
@@ -208,13 +234,14 @@ class _SearchScreenState extends State<SearchScreen> {
                           height: 60,
                           width: 60,
                           decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                  color: searchController.selectedIndices
-                                          .contains(index)
-                                      ? const Color(0xffA47842)
-                                      : Colors.grey)),
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: isSelected
+                                  ? const Color(0xffA47842)
+                                  : Colors.grey,
+                            ),
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(15),
                             child: Image.asset(
@@ -222,14 +249,15 @@ class _SearchScreenState extends State<SearchScreen> {
                             ),
                           ),
                         ),
-                        Text(searchController.diamondShapes[index],
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: searchController.selectedIndices
-                                      .contains(index)
-                                  ? const Color(0xffA47842)
-                                  : Colors.black,
-                            )),
+                        Text(
+                          diamondShape,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: isSelected
+                                ? const Color(0xffA47842)
+                                : Colors.black,
+                          ),
+                        ),
                       ],
                     ),
                   );
@@ -240,190 +268,206 @@ class _SearchScreenState extends State<SearchScreen> {
             const SizedBox(height: 10),
 
             ///cateRange
+
             TextFormField(
               controller: searchController.rangeController,
-              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                _updateRangesFromText(); // Update ranges as user types
+              },
               decoration: InputDecoration(
-                  labelText: "Carat Range",
-                  labelStyle: const TextStyle(color: Colors.grey),
-                  suffixIcon: IconButton(
-                    onPressed: () async {
-                      await showModalBottomSheet<List<String>>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return StatefulBuilder(
-                              builder:
-                                  (BuildContext context, StateSetter setState) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(height: 1.h),
-                                    const Text(
-                                      'Select Ranges',
-                                      style: TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                labelText: "Carat Range",
+                labelStyle: const TextStyle(color: Colors.grey),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.expand_circle_down_rounded),
+                  onPressed: () async {
+                    await showModalBottomSheet<List<String>>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return StatefulBuilder(
+                          builder:
+                              (BuildContext context, StateSetter setState) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(height: 16),
+                                const Text(
+                                  'Select Ranges',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                                SizedBox(
+                                  height: 310,
+                                  child: GridView.builder(
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      mainAxisExtent: 60,
                                     ),
-                                    SizedBox(height: 1.h),
-                                    SizedBox(
-                                      height: 310,
-                                      child: GridView.builder(
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisCount: 3,
-                                                mainAxisExtent: 60),
-                                        itemCount:
-                                            searchController.ranges.length,
-                                        itemBuilder: (context, index) {
-                                          final range =
-                                              searchController.ranges[index];
-                                          final isSelected =
-                                              _temporarySelectedRanges
-                                                  .contains(range);
-                                          return Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  if (isSelected) {
-                                                    _temporarySelectedRanges
-                                                        .remove(range);
-                                                  } else {
-                                                    _temporarySelectedRanges
-                                                        .add(range);
-                                                  }
-                                                });
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        width: 2,
-                                                        color: isSelected
-                                                            ? const Color(
-                                                                0xffA47842)
-                                                            : Colors
-                                                                .grey.shade300),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    color: Colors.white),
-                                                child: Center(
-                                                  child: Text(
-                                                    range,
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color: isSelected
-                                                            ? const Color(
-                                                                0xffA47842)
-                                                            : Colors.grey,
-                                                        fontSize: 12),
-                                                  ),
+                                    itemCount: searchController.ranges.length,
+                                    itemBuilder: (context, index) {
+                                      final range =
+                                          searchController.ranges[index];
+                                      final isSelected = searchController
+                                          .temporarySelectedRanges
+                                          .contains(range);
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              if (isSelected) {
+                                                // If already selected, remove it
+                                                searchController
+                                                    .temporarySelectedRanges
+                                                    .remove(range);
+                                              } else {
+                                                // If not selected, add it
+                                                searchController
+                                                    .temporarySelectedRanges
+                                                    .add(range);
+                                              }
+                                              // Update the TextFormField with selected ranges
+                                              searchController
+                                                      .rangeController.text =
+                                                  searchController
+                                                      .temporarySelectedRanges
+                                                      .join(', ');
+                                            });
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                width: 2,
+                                                color: isSelected
+                                                    ? const Color(0xffA47842)
+                                                    : Colors.grey.shade300,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: Colors.white,
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                range,
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: isSelected
+                                                      ? const Color(0xffA47842)
+                                                      : Colors.grey,
+                                                  fontSize: 12,
                                                 ),
                                               ),
                                             ),
-                                          );
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.pop(
+                                              context); // Close without applying changes
                                         },
+                                        child: Container(
+                                          height: 50,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: const Color(0xffE1E1E1),
+                                          ),
+                                          child: const Center(
+                                            child: Text("Clear"),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              Navigator.pop(
-                                                context,
-                                              );
-                                            },
-                                            child: Container(
-                                              height: 50,
-                                              width: 100,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                color: const Color(0xffE1E1E1),
-                                              ),
-                                              child: const Center(
-                                                child: Text("Clear"),
-                                              ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          _applySelections(); // Apply selected ranges
+                                        },
+                                        child: Container(
+                                          height: 50,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: const Color(0xffA47842),
+                                          ),
+                                          child: const Center(
+                                            child: Text(
+                                              "Apply",
+                                              style: TextStyle(
+                                                  color: Colors.white),
                                             ),
                                           ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              return _applySelections();
-                                            },
-                                            child: Container(
-                                              height: 50,
-                                              width: 100,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                color: const Color(0xffA47842),
-                                              ),
-                                              child: const Center(
-                                                child: Text(
-                                                  "Apply",
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                    )
-                                  ],
-                                );
-                              },
+                                    ],
+                                  ),
+                                )
+                              ],
                             );
-                          });
-                    },
-                    color: const Color(0xffAA864E),
-                    icon: const Icon(
-                      Icons.expand_circle_down_rounded,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10))),
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
             ),
             const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: "From",
-                      labelStyle: const TextStyle(color: Colors.grey),
-                      focusedBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(color: Colors.grey)),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
+            searchController.rangeController.text.isNotEmpty
+                ? Container()
+                : Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: "From",
+                            labelStyle: const TextStyle(color: Colors.grey),
+                            focusedBorder: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.grey)),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                          child: TextField(
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          focusedBorder: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              borderSide: BorderSide(color: Colors.grey)),
+                          labelText: "To",
+                          labelStyle: const TextStyle(color: Colors.grey),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                      ))
+                    ],
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                    child: TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    focusedBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Colors.grey)),
-                    labelText: "To",
-                    labelStyle: const TextStyle(color: Colors.grey),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
-                ))
-              ],
-            ),
             SizedBox(height: 3.h),
 
             /// color
@@ -466,43 +510,54 @@ class _SearchScreenState extends State<SearchScreen> {
                 scrollDirection: Axis.horizontal,
                 itemCount: searchController.colorList.length,
                 itemBuilder: (context, s) {
+                  String color =
+                      searchController.colorList[s]; // Get the current color
+                  bool isSelected = searchController.selectedColors
+                      .contains(color); // Check if this color is selected
+
                   return Padding(
                     padding: const EdgeInsets.all(5),
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
-                          searchController.isColorCheckedList =
-                              searchController.colorList[s];
-                          searchController.isColorChecked[s] =
-                              !searchController.isColorChecked[s];
+                          if (isSelected) {
+                            // If already selected, remove from the list
+                            searchController.selectedColors.remove(color);
+                          } else {
+                            // If not selected, add to the list
+                            searchController.selectedColors.add(color);
+                          }
                         });
                       },
                       child: Container(
                         width: 55,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          boxShadow: searchController.isColorChecked[s]
+                          boxShadow: isSelected
                               ? [
                                   BoxShadow(
-                                      color: const Color(0xffA47842)
-                                          .withOpacity(0.2),
-                                      blurRadius: 10)
+                                    color: const Color(0xffA47842)
+                                        .withOpacity(0.2),
+                                    blurRadius: 10,
+                                  )
                                 ]
                               : [],
                           border: Border.all(
-                              color: searchController.isColorChecked[s]
-                                  ? const Color(0xffA47842)
-                                  : Colors.grey),
+                            color: isSelected
+                                ? const Color(0xffA47842)
+                                : Colors.grey,
+                          ),
                           shape: BoxShape.circle,
                         ),
                         child: Center(
                           child: Text(
-                            searchController.colorList[s],
+                            color,
                             style: TextStyle(
-                                fontSize: 14.sp,
-                                color: searchController.isColorChecked[s]
-                                    ? const Color(0xffA47842)
-                                    : Colors.grey),
+                              fontSize: 14.sp,
+                              color: isSelected
+                                  ? const Color(0xffA47842)
+                                  : Colors.grey,
+                            ),
                           ),
                         ),
                       ),
@@ -511,6 +566,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 },
               ),
             ),
+
             const SizedBox(height: 10),
 
             ///clarity
@@ -553,47 +609,56 @@ class _SearchScreenState extends State<SearchScreen> {
                 scrollDirection: Axis.horizontal,
                 itemCount: searchController.clarityList.length,
                 itemBuilder: (context, s) {
+                  String clarity = searchController.clarityList[s];
+                  bool isSelected =
+                      searchController.selectedclarities.contains(clarity);
+
                   return Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            searchController.isClaritySelectedList =
-                                searchController.clarityList[s];
-                            searchController.isClaritySelected[s] =
-                                !searchController.isClaritySelected[s];
-                          });
-                        },
-                        child: Container(
-                          width: 55,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: searchController.isClaritySelected[s]
-                                ? [
-                                    BoxShadow(
-                                        color: const Color(0xffA47842)
-                                            .withOpacity(0.2),
-                                        blurRadius: 10)
-                                  ]
-                                : [],
-                            border: Border.all(
-                                color: searchController.isClaritySelected[s]
-                                    ? const Color(0xffA47842)
-                                    : Colors.grey),
-                            shape: BoxShape.circle,
+                    padding: const EdgeInsets.all(5),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (isSelected) {
+                            searchController.selectedclarities.remove(clarity);
+                          } else {
+                            searchController.selectedclarities.add(clarity);
+                          }
+                        });
+                      },
+                      child: Container(
+                        width: 55,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: isSelected
+                              ? [
+                                  BoxShadow(
+                                    color: const Color(0xffA47842)
+                                        .withOpacity(0.2),
+                                    blurRadius: 10,
+                                  )
+                                ]
+                              : [],
+                          border: Border.all(
+                            color: isSelected
+                                ? const Color(0xffA47842)
+                                : Colors.grey,
                           ),
-                          child: Center(
-                            child: Text(
-                              searchController.clarityList[s],
-                              style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: searchController.isClaritySelected[s]
-                                      ? const Color(0xffA47842)
-                                      : Colors.grey),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            clarity,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: isSelected
+                                  ? const Color(0xffA47842)
+                                  : Colors.grey,
                             ),
                           ),
                         ),
-                      ));
+                      ),
+                    ),
+                  );
                 },
               ),
             ),
@@ -632,61 +697,16 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ]),
             ),
-            // SizedBox(
-            //   height: 60,
-            //   child: ListView.builder(
-            //     scrollDirection: Axis.horizontal,
-            //     itemCount: searchController.finishList.length,
-            //     itemBuilder: (context, s) {
-            //       return Padding(
-            //         padding: const EdgeInsets.all(5),
-            //         child: GestureDetector(
-            //           onTap: () {
-            //             setState(() {
-            //               searchController.isFinishSelectedList =
-            //                   searchController.finishList[s];
-            //               searchController.isFinishSelected[s] =
-            //                   !searchController.isFinishSelected[s];
-            //             });
-            //           },
-            //           child: Container(
-            //             width: 55,
-            //             decoration: BoxDecoration(
-            //               color: Colors.white,
-            //               boxShadow: searchController.isFinishSelected[s]
-            //                   ? [
-            //                       BoxShadow(
-            //                           color: const Color(0xffA47842)
-            //                               .withOpacity(0.3),
-            //                           spreadRadius: 2,
-            //                           offset: const Offset(0, 6),
-            //                           blurRadius: 10)
-            //                     ]
-            //                   : [],
-            //               border: Border.all(
-            //                   color: searchController.isFinishSelected[s]
-            //                       ? const Color(0xffA47842)
-            //                       : Colors.grey),
-            //               shape: BoxShape.circle,
-            //             ),
-            //             child: Center(
-            //               child: Text(
-            //                 searchController.finishList[s],
-            //                 style: TextStyle(
-            //                     fontSize: 14.sp,
-            //                     color: searchController.isFinishSelected[s]
-            //                         ? const Color(0xffA47842)
-            //                         : Colors.grey),
-            //               ),
-            //             ),
-            //           ),
-            //         ),
-            //       );
-            //     },
-            //   ),
-            // ),
-            buildSelectableList(searchController.finishList,
-                searchController.selectedFinish, onFinishSelect),
+            Wrap(
+              spacing: 8.0,
+              children: searchController.finishList.map((item) {
+                return customChoiceChip(
+                  label: item,
+                  selected: searchController.selectedFinish == item,
+                  onSelected: (_) => onFinishSelect(item),
+                );
+              }).toList(),
+            ),
 
             ///cut
             Container(
@@ -726,56 +746,6 @@ class _SearchScreenState extends State<SearchScreen> {
             buildSelectableCutList(searchController.cutList,
                 searchController.selectedCut, onCutSelect),
 
-            // SizedBox(
-            //   height: 60,
-            //   child: ListView.builder(
-            //     scrollDirection: Axis.horizontal,
-            //     itemCount: searchController.cutList.length,
-            //     itemBuilder: (context, s) {
-            //       return Padding(
-            //         padding: const EdgeInsets.all(5),
-            //         child: GestureDetector(
-            //           onTap: () {
-            //             setState(() {
-            //               searchController.isCutSelectedList =
-            //                   searchController.cutList[s];
-            //               searchController.isCutSelected[s] =
-            //                   !searchController.isCutSelected[s];
-            //             });
-            //           },
-            //           child: Container(
-            //             width: 55,
-            //             decoration: BoxDecoration(
-            //                 color: Colors.white,
-            //                 boxShadow: searchController.isCutSelected[s]
-            //                     ? [
-            //                         BoxShadow(
-            //                             color: const Color(0xffA47842)
-            //                                 .withOpacity(0.2),
-            //                             blurRadius: 10)
-            //                       ]
-            //                     : [],
-            //                 border: Border.all(
-            //                     color: searchController.isCutSelected[s]
-            //                         ? const Color(0xffA47842)
-            //                         : Colors.grey),
-            //                 shape: BoxShape.circle),
-            //             child: Center(
-            //               child: Text(
-            //                 searchController.cutList[s],
-            //                 style: TextStyle(
-            //                     fontSize: 14.sp,
-            //                     color: searchController.isCutSelected[s]
-            //                         ? const Color(0xffA47842)
-            //                         : Colors.grey),
-            //               ),
-            //             ),
-            //           ),
-            //         ),
-            //       );
-            //     },
-            //   ),
-            // ),
             Container(
               height: 50,
               width: double.infinity,
@@ -848,57 +818,6 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             buildSelectableSymmetryList(searchController.symmetryList,
                 searchController.selectedSymmetry, onSymmetrySelect),
-            // SizedBox(
-            //   height: 60,
-            //   child: ListView.builder(
-            //     scrollDirection: Axis.horizontal,
-            //     itemCount: searchController.symmetryList.length,
-            //     itemBuilder: (context, s) {
-            //       return Padding(
-            //         padding: const EdgeInsets.all(5),
-            //         child: GestureDetector(
-            //           onTap: () {
-            //             setState(() {
-            //               searchController.isSymmetrySelectedList =
-            //                   searchController.symmetryList[s];
-            //               searchController.isSymmetrySelected[s] =
-            //                   !searchController.isSymmetrySelected[s];
-            //             });
-            //           },
-            //           child: Container(
-            //             width: 55,
-            //             decoration: BoxDecoration(
-            //               color: Colors.white,
-            //               boxShadow: searchController.isSymmetrySelected[s]
-            //                   ? [
-            //                       BoxShadow(
-            //                           color: const Color(0xffA47842)
-            //                               .withOpacity(0.2),
-            //                           blurRadius: 10)
-            //                     ]
-            //                   : [],
-            //               border: Border.all(
-            //                   color: searchController.isSymmetrySelected[s]
-            //                       ? const Color(0xffA47842)
-            //                       : Colors.grey),
-            //               shape: BoxShape.circle,
-            //             ),
-            //             child: Center(
-            //               child: Text(
-            //                 searchController.symmetryList[s],
-            //                 style: TextStyle(
-            //                     fontSize: 14.sp,
-            //                     color: searchController.isSymmetrySelected[s]
-            //                         ? const Color(0xffA47842)
-            //                         : Colors.grey),
-            //               ),
-            //             ),
-            //           ),
-            //         ),
-            //       );
-            //     },
-            //   ),
-            // ),
 
             ///lab
 
@@ -941,43 +860,53 @@ class _SearchScreenState extends State<SearchScreen> {
                 scrollDirection: Axis.horizontal,
                 itemCount: searchController.labList.length,
                 itemBuilder: (context, s) {
+                  final lab = searchController.labList[s];
+                  final isSelected =
+                      searchController.selectedLabs.contains(lab);
+
                   return Padding(
                     padding: const EdgeInsets.all(5),
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
-                          searchController.isLabSelectedList =
-                              searchController.labList[s];
-                          searchController.isLabSelected[s] =
-                              !searchController.isLabSelected[s];
+                          if (isSelected) {
+                            // Remove from selected list if already selected
+                            searchController.selectedLabs.remove(lab);
+                          } else {
+                            // Add to selected list if not selected
+                            searchController.selectedLabs.add(lab);
+                          }
                         });
                       },
                       child: Container(
                         width: 60,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          boxShadow: searchController.isLabSelected[s]
+                          boxShadow: isSelected
                               ? [
                                   BoxShadow(
-                                      color: const Color(0xffA47842)
-                                          .withOpacity(0.2),
-                                      blurRadius: 10)
+                                    color: const Color(0xffA47842)
+                                        .withOpacity(0.2),
+                                    blurRadius: 10,
+                                  ),
                                 ]
                               : [],
                           border: Border.all(
-                              color: searchController.isLabSelected[s]
-                                  ? const Color(0xffA47842)
-                                  : Colors.grey),
+                            color: isSelected
+                                ? const Color(0xffA47842)
+                                : Colors.grey,
+                          ),
                           shape: BoxShape.circle,
                         ),
                         child: Center(
                           child: Text(
-                            searchController.labList[s],
+                            lab,
                             style: TextStyle(
-                                fontSize: 14.sp,
-                                color: searchController.isLabSelected[s]
-                                    ? const Color(0xffA47842)
-                                    : Colors.grey),
+                              fontSize: 14.sp,
+                              color: isSelected
+                                  ? const Color(0xffA47842)
+                                  : Colors.grey,
+                            ),
                           ),
                         ),
                       ),
@@ -1374,6 +1303,21 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
     );
+  }
+
+  void _formatRange() {
+    double fromValue =
+        double.tryParse(searchController.datacontroller.txtFromD.text) ?? 0.0;
+    double toValue =
+        double.tryParse(searchController.datacontroller.txtToD.text) ?? 0.0;
+
+    // Format to 3 decimal places
+    String fromFormatted = fromValue.toStringAsFixed(3);
+    String toFormatted = toValue.toStringAsFixed(3);
+
+    setState(() {
+      searchController.formattedRange = "$fromFormatted - $toFormatted";
+    });
   }
 
   Widget buildSelectableList(

@@ -1,4 +1,4 @@
-import 'package:diamond_app/Home/new_arrival_details_screen.dart';
+import 'package:diamond_app/Home/diamond_details_screen.dart';
 import 'package:diamond_app/utiles/data_controller.dart';
 import 'package:diamond_app/widget/custom_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -303,11 +303,10 @@ class _NewArrivalScreenState extends State<NewArrivalScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        NewArrivalDetailsScreen(
-                                            next: false,
-                                            itemData: datacontroller
-                                                .filterDatalist[index]),
+                                    builder: (context) => DiamondDetailsScreen(
+                                        next: false,
+                                        itemData: datacontroller
+                                            .filterDatalist[index]),
                                   ));
                             },
                             child: Padding(

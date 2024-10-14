@@ -13,7 +13,7 @@ class ControllerSearch extends GetxController {
   ];
 
   List<String> cutList = [
-    "IDEAL",
+    "ID",
     "EX",
     "VG",
     "GD",
@@ -47,8 +47,7 @@ class ControllerSearch extends GetxController {
     "NO-CERT",
     "Other",
   ];
-  List<bool> isLabSelected = [false, false, false, false];
-  late String isLabSelectedList;
+  List<String> selectedLabs = [];
 
   ///location
   List locationList = ["Surat"];
@@ -81,12 +80,17 @@ class ControllerSearch extends GetxController {
   ///
   int s = 0;
   int c = 0;
+  List<String> appliedSelectedRanges = [];
+
+  List<String> temporarySelectedRanges = [];
+
   final TextEditingController rangeController = TextEditingController();
+  final TextEditingController rangeFController = TextEditingController();
+  final TextEditingController rangeTController = TextEditingController();
 
   ///Stage
-  List stageList = ["All", "Available", "New", "Hold", "Price Revised", "Memo"];
-  List<bool> isStageSelected = [false, false, false, false, false, false];
-  late String isStageSelectedList;
+  List stageList = ["ALL", "AVAILABLE", "NEW", "HOLD", "PRICE REVISED", "MEMO"];
+  List<String> isStageSelectedList = [];
 
   /// Color
   List colorList = [
@@ -105,23 +109,7 @@ class ControllerSearch extends GetxController {
     "Q",
     "Fancy"
   ];
-  List<bool> isColorChecked = [
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false
-  ];
-  late String isColorCheckedList;
+  List<String> selectedColors = [];
 
   ///clarity
   List clarityList = [
@@ -132,19 +120,20 @@ class ControllerSearch extends GetxController {
     "VS1",
     "VS2",
   ];
-  List<bool> isClaritySelected = [false, false, false, false, false, false];
-  late String isClaritySelectedList;
+  List<String> selectedclarities = [];
+
+  ///shap
   List<String> diamondShapes = [
-    "Asscher",
-    "Cushion",
-    "Emerald",
-    "Heart",
-    "Marquise",
-    "Oval",
-    "Pear",
-    "Princess",
-    "Radiant",
-    "Round",
+    "ASSCHER",
+    "CUSHION",
+    "EMERALD",
+    "HEART",
+    "MARQUISE",
+    "OVAL",
+    "PEAR",
+    "PRINECESS",
+    "RADIANT",
+    "ROUND",
   ];
 
   List<String> diamondSelectedShapes = [
@@ -159,9 +148,7 @@ class ControllerSearch extends GetxController {
     "assets/images/radiant.png",
     "assets/images/round.png"
   ];
-
-  List<int> selectedIndices = [];
-  late String selectedDiamond;
+  List<String> selectedShapes = [];
 
   ///Certificate
   TextEditingController txtCert = TextEditingController();
@@ -181,65 +168,34 @@ class ControllerSearch extends GetxController {
   var txtName = TextEditingController();
   final List<Map<String, String>> combinedDiamondData = [];
   late int lastSelectedIndex;
+  double? averageValue;
 
-  Future<void> insertSelectedData() async {
-    DbHelper.helper.insertData(
-      imName: diamondShapes[lastSelectedIndex],
-      images: diamondSelectedShapes[lastSelectedIndex],
-      lab: isLabSelectedList,
-      stage: isStageSelectedList,
-      color: isColorCheckedList,
-      clarity: isClaritySelectedList,
-      finish: selectedFinish,
-      cut: selectedCut,
-      symmetry: selectedSymmetry,
-      location: isLocationSelectedList,
-      certiNo: txtcer.text,
-      shades: isShadesSelectedList,
-      handA: isHandSelectedList,
-      price:
-          "\$${datacontroller.txtpfrom.text}.${datacontroller.txtpto.text} $isPriceSelectedList",
-      tab: "${datacontroller.txtFromT.text}.${datacontroller.txtToT.text}",
-      depth: "${datacontroller.txtFromD.text}.${datacontroller.txtToD.text}",
-      lengh: "${datacontroller.txtFromL.text}.${datacontroller.txtToL.text}",
-      width: "${datacontroller.txtFromW.text}.${datacontroller.txtToW.text}",
-      ratio: "${datacontroller.txtFromR.text}.${datacontroller.txtToR.text}",
-      crown: "\$ ${datacontroller.txtFromC.text}.${datacontroller.txtToC.text}",
-      height: "${datacontroller.txtFromH.text}.${datacontroller.txtToH.text}",
-      crownAngle:
-          "${datacontroller.txtFromCA.text}.${datacontroller.txtToCA.text}",
-      pavDepth:
-          "${datacontroller.txtFromPD.text}.${datacontroller.txtToPD.text}",
-      pavAngle:
-          "${datacontroller.txtFromPA.text}.${datacontroller.txtToPA.text}",
-    );
-  }
-
+  String formattedRange = "";
   List<String> ranges = [
     'Select All',
-    '0.01-0.29',
-    '0.30-0.39',
-    '0.40-0.49',
-    '0.50-0.59',
-    '0.60-0.69',
-    '0.70-0.79',
-    '0.80-0.89',
-    '0.90-0.99',
-    '1.00-1.10',
-    '1.11-1.49',
-    '1.50-1.60',
-    '1.61-1.99',
-    '2.00-2.10',
-    '2.11-2.49',
-    '2.50-2.60',
-    '2.61-2.99',
-    '3.00-3.10',
-    '3.11-3.49',
-    '3.50-3.60',
-    '3.61-3.99',
-    '4.00-4.99',
-    '5.00-5.99',
-    '6.00-9.99',
-    '10.00-20.00',
+    '0.001 - 0.290',
+    '0.300 - 0.390',
+    '0.400 - 0.490',
+    '0.500 - 0.590',
+    '0.600 - 0.690',
+    '0.700 - 0.790',
+    '0.800 - 0.890',
+    '0.900 - 0.990',
+    '1.000 - 1.100',
+    '1.110 - 1.490',
+    '1.500 - 1.600',
+    '1.610 - 1.990',
+    '2.000 - 2.100',
+    '2.110 - 2.490',
+    '2.500 - 2.600',
+    '2.610 - 2.990',
+    '3.000 - 3.990',
+    '3.110 - 3.490',
+    '3.500 - 3.600',
+    '3.610 - 3.990',
+    '4.000 - 4.990',
+    '5.000 - 5.990',
+    '6.000 - 9.990',
+    '10.000 - 20.00',
   ];
 }

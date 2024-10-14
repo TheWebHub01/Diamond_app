@@ -1,4 +1,4 @@
-import 'package:diamond_app/Home/new_arrival_details_screen.dart';
+import 'package:diamond_app/Home/diamond_details_screen.dart';
 import 'package:diamond_app/utiles/data_controller.dart';
 import 'package:diamond_app/widget/custom_app_bar.dart';
 import 'package:diamond_app/widget/filter_drawer.dart';
@@ -109,11 +109,10 @@ class _MyOffersScreenState extends State<MyOffersScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        NewArrivalDetailsScreen(
-                                            next: false,
-                                            itemData: datacontroller
-                                                .offerDatalist[index]),
+                                    builder: (context) => DiamondDetailsScreen(
+                                        next: false,
+                                        itemData: datacontroller
+                                            .offerDatalist[index]),
                                   ));
                             },
                             child: Padding(

@@ -1,4 +1,4 @@
-import 'package:diamond_app/Home/new_arrival_details_screen.dart';
+import 'package:diamond_app/Home/diamond_details_screen.dart';
 import 'package:diamond_app/utiles/data_controller.dart';
 import 'package:diamond_app/widget/custom_app_bar.dart';
 import 'package:diamond_app/widget/filter_drawer.dart';
@@ -57,16 +57,14 @@ class _HoldListScreenState extends State<HoldListScreen> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("CTS",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text("CTS", style: TextStyle(fontWeight: FontWeight.bold)),
                     Text("185.14"),
                   ],
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Dis%",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text("Dis%", style: TextStyle(fontWeight: FontWeight.bold)),
                     Text("99.47"),
                   ],
                 ),
@@ -110,8 +108,10 @@ class _HoldListScreenState extends State<HoldListScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => NewArrivalDetailsScreen(next: false,
-                                      itemData: datacontroller.holdDatalist[index]),
+                                  builder: (context) => DiamondDetailsScreen(
+                                      next: false,
+                                      itemData:
+                                          datacontroller.holdDatalist[index]),
                                 ));
                           },
                           child: Padding(
@@ -128,8 +128,7 @@ class _HoldListScreenState extends State<HoldListScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
                                           "${datacontroller.holdDatalist[index]['stage']}"),
@@ -142,8 +141,7 @@ class _HoldListScreenState extends State<HoldListScreen> {
                                     ],
                                   ),
                                   Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
                                           "${datacontroller.holdDatalist[index]['clarity']}"),
@@ -156,8 +154,7 @@ class _HoldListScreenState extends State<HoldListScreen> {
                                     ],
                                   ),
                                   Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
                                           "Length :${datacontroller.holdDatalist[index]['lengh']} "),
@@ -168,8 +165,7 @@ class _HoldListScreenState extends State<HoldListScreen> {
                                     ],
                                   ),
                                   Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
                                           "${datacontroller.holdDatalist[index]['ratio']}"),

@@ -60,11 +60,16 @@ class _ExcelScreenState extends State<ExcelScreen> {
         'mesurement': row[16].toString(),
         'depth': row[17].toString(),
         'table': row[18].toString(),
+        'video_url': row[19].toString(),
+        'image_url': row[20].toString(),
+        'certificate_url':
+            "https://www.igi.org/verify-your-report/?r=648420189",
+        'Comments': row[21].toString(),
       });
     }
 
     // Upload the entire list of rows as a single document
-    await firestore.collection('diamonds').doc('abc').set({
+    await firestore.collection('diamonds').doc('data').set({
       'data': formattedData, // Store all rows under the "data" key
     });
   }
