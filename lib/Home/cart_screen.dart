@@ -1,6 +1,9 @@
 import 'package:diamond_app/Home/diamond_details_screen.dart';
+import 'package:diamond_app/Home/home_screen.dart';
 import 'package:diamond_app/Model/cart_model.dart';
+import 'package:diamond_app/email/email.dart';
 import 'package:diamond_app/service/cart_service.dart';
+import 'package:diamond_app/widget/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,9 +45,18 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Your Cart')),
       body: Column(
         children: [
+          CustomAppBar(
+            showActionButton: false,
+            title: "Cart Screen",
+            backOnTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );
+            },
+          ),
           Container(
             height: 11.h,
             width: double.infinity,
@@ -95,9 +107,6 @@ class _CartPageState extends State<CartPage> {
                 ),
               ],
             ),
-          ),
-          SizedBox(
-            height: 1.h,
           ),
           Expanded(
             child: userId.isEmpty

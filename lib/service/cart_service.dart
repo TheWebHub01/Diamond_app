@@ -1,14 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:diamond_app/Home/cart_screen.dart';
+import 'package:diamond_app/Home/daimondList_screen.dart';
 import 'package:diamond_app/Model/cart_model.dart';
+import 'package:flutter/material.dart';
 
 class CartService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> addToCart(String userId, CartItem item) async {
+  Future<void> addToCart(
+      String userId, CartItem item, BuildContext context, String Shape) async {
     final cartRef = _firestore.collection('carts').doc(userId);
     await cartRef.set({
       'items': FieldValue.arrayUnion([item.toMap()]),
     }, SetOptions(merge: true));
+
+    await ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('${Shape} added to cart!')),
+    );
+    Navigator.pop(context);
   }
 
   Future<List<CartItem>> getCartItems(String userId) async {
@@ -37,5 +46,23 @@ class CartService {
     }
 
     return [];
+  }
+
+  Future<void> removeFromCart(
+      String userId, CartItem item, BuildContext context, String shape) async {
+    final cartRef = _firestore.collection('carts').doc(userId);
+    await cartRef.update({
+      'items': FieldValue.arrayRemove([item.toMap()]),
+    });
+
+    await ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('$shape Removed successfully')),
+    );
+    await Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CartPage(),
+      ),
+    );
   }
 }

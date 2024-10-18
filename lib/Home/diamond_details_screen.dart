@@ -85,11 +85,34 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
     });
     if (_selectedIndex == 3) {
       if (widget.pageName == "CartScreen") {
-
-
-
-
-        
+        final cartService = CartService();
+        final cartItem = CartItem(
+          id: widget.id,
+          comments: widget.Comments,
+          certiNo: widget.certiNo,
+          certificateUrl: widget.certificate_url,
+          certified: widget.certified,
+          city: widget.city,
+          clarity: widget.clarity,
+          color: widget.color,
+          cut: widget.cut,
+          depth: widget.depth,
+          fluorescene: widget.fluorescene,
+          imageUrl: widget.image_url,
+          mesurement: widget.mesurement,
+          polish: widget.polish,
+          shape: widget.shape,
+          size: widget.size,
+          sizeRange: widget.sizeRange,
+          status: widget.status,
+          stoneID: widget.stone_ID,
+          symm: widget.symm,
+          table: widget.table,
+          type: widget.type,
+          videoUrl: widget.video_url,
+        );
+        await cartService.removeFromCart(
+            userid, cartItem, context, widget.shape);
       } else {
         final cartService = CartService();
         final cartItem = CartItem(
@@ -117,10 +140,7 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
           type: widget.type,
           videoUrl: widget.video_url,
         );
-        await cartService.addToCart(userid, cartItem);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${widget.shape} added to cart!')),
-        );
+        await cartService.addToCart(userid, cartItem, context, widget.shape);
       }
     }
   }
