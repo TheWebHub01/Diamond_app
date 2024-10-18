@@ -4,7 +4,6 @@ import 'package:diamond_app/Home/my_offer_screen.dart';
 import 'package:diamond_app/Home/new_arrival_screen.dart';
 import 'package:diamond_app/Home/search_bottom_navigation_screen.dart';
 import 'package:diamond_app/Home/upcomming_screen.dart';
-import 'package:diamond_app/widget/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 

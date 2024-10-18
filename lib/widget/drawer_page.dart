@@ -13,7 +13,6 @@ import 'package:diamond_app/Home/upcomming_screen.dart';
 import 'package:diamond_app/Register/tab_bar_screen.dart';
 import 'package:diamond_app/utiles/data_controller.dart';
 import 'package:diamond_app/utiles/sherd_pref.dart';
-import 'package:diamond_app/widget/bottom_navigation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerPage extends StatefulWidget {
