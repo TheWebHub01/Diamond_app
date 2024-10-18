@@ -300,14 +300,14 @@ class _NewArrivalScreenState extends State<NewArrivalScreen> {
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => DiamondDetailsScreen(
-                                        next: false,
-                                        itemData: datacontroller
-                                            .filterDatalist[index]),
-                                  ));
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //       builder: (context) => DiamondDetailsScreen(
+                              //           next: false,
+                              //           itemData: datacontroller
+                              //               .filterDatalist[index]),
+                              //     ));
                             },
                             child: Padding(
                               padding: const EdgeInsets.only(

@@ -105,14 +105,14 @@ class _HoldListScreenState extends State<HoldListScreen> {
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DiamondDetailsScreen(
-                                      next: false,
-                                      itemData:
-                                          datacontroller.holdDatalist[index]),
-                                ));
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (context) => DiamondDetailsScreen(
+                            //           next: false,
+                            //           itemData:
+                            //               datacontroller.holdDatalist[index]),
+                            //     ));
                           },
                           child: Padding(
                             padding: const EdgeInsets.only(

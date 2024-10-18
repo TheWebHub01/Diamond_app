@@ -35,51 +35,11 @@ class _HomeContainerState extends State<HomeContainer> {
 
   List<Widget> screen = [
     const SearchBottomNavigationScreen(),
-    BottamnavBar(
-      screens: const [
-        NewArrivalScreen(),
-        NewArrivalScreen(),
-        NewArrivalScreen(),
-        NewArrivalScreen(),
-        NewArrivalScreen(),
-      ],
-    ),
-    BottamnavBar(
-      screens: const [
-        ExclusiveScreen(),
-        ExclusiveScreen(),
-        ExclusiveScreen(),
-        ExclusiveScreen(),
-        ExclusiveScreen(),
-      ],
-    ),
-    BottamnavBar(
-      screens: const [
-        UpcomingScreen(),
-        UpcomingScreen(),
-        UpcomingScreen(),
-        UpcomingScreen(),
-        UpcomingScreen(),
-      ],
-    ),
-    BottamnavBar(
-      screens: const [
-        HoldListScreen(),
-        HoldListScreen(),
-        HoldListScreen(),
-        HoldListScreen(),
-        HoldListScreen(),
-      ],
-    ),
-    BottamnavBar(
-      screens: const [
-        MyOffersScreen(),
-        MyOffersScreen(),
-        MyOffersScreen(),
-        MyOffersScreen(),
-        MyOffersScreen(),
-      ],
-    ),
+    NewArrivalScreen(),
+    ExclusiveScreen(),
+    UpcomingScreen(),
+    HoldListScreen(),
+    // MyOffersScreen(),
   ];
 
   @override

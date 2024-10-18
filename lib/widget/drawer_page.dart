@@ -1,3 +1,4 @@
+import 'package:diamond_app/Home/cart_screen.dart';
 import 'package:diamond_app/progress_loader/progress_loader.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -101,19 +102,8 @@ class _DrawerPageState extends State<DrawerPage> {
           const Divider(),
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BottamnavBar(
-                      screens: const [
-                        NewArrivalScreen(),
-                        NewArrivalScreen(),
-                        NewArrivalScreen(),
-                        NewArrivalScreen(),
-                        NewArrivalScreen(),
-                      ],
-                    ),
-                  ));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => NewArrivalScreen()));
             },
             child: const SizedBox(
               height: 40,
@@ -126,19 +116,8 @@ class _DrawerPageState extends State<DrawerPage> {
           const Divider(),
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BottamnavBar(
-                      screens: const [
-                        ExclusiveScreen(),
-                        ExclusiveScreen(),
-                        ExclusiveScreen(),
-                        ExclusiveScreen(),
-                        ExclusiveScreen(),
-                      ],
-                    ),
-                  ));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ExclusiveScreen()));
             },
             child: const SizedBox(
               height: 40,
@@ -151,19 +130,8 @@ class _DrawerPageState extends State<DrawerPage> {
           const Divider(),
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BottamnavBar(
-                      screens: const [
-                        UpcomingScreen(),
-                        UpcomingScreen(),
-                        UpcomingScreen(),
-                        UpcomingScreen(),
-                        UpcomingScreen(),
-                      ],
-                    ),
-                  ));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => UpcomingScreen()));
             },
             child: const SizedBox(
               height: 40,
@@ -193,19 +161,8 @@ class _DrawerPageState extends State<DrawerPage> {
           const Divider(),
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BottamnavBar(
-                      screens: const [
-                        HoldListScreen(),
-                        HoldListScreen(),
-                        HoldListScreen(),
-                        HoldListScreen(),
-                        HoldListScreen(),
-                      ],
-                    ),
-                  ));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => HoldListScreen()));
             },
             child: const SizedBox(
               height: 40,
@@ -229,16 +186,22 @@ class _DrawerPageState extends State<DrawerPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => BottamnavBar(
-                      screens: const [
-                        MyOffersScreen(),
-                        MyOffersScreen(),
-                        MyOffersScreen(),
-                        MyOffersScreen(),
-                        MyOffersScreen(),
-                      ],
-                    ),
+                    builder: (context) => CartPage(),
                   ));
+            },
+            child: const SizedBox(
+              height: 40,
+              child: ListTile(
+                leading: Icon(Icons.card_travel),
+                title: Text("My Cart"),
+              ),
+            ),
+          ),
+          const Divider(),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MyOffersScreen()));
             },
             child: SizedBox(
               height: 40,

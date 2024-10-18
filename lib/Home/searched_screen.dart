@@ -40,13 +40,16 @@ class _SearchedScreenState extends State<SearchedScreen> {
           selectRange: searchController.temporarySelectedRanges,
           selectdepth:
               '${searchController.datacontroller.txtFromD.text}.${searchController.datacontroller.txtToD.text}',
+          selectTable: searchController.datacontroller.txtFromT.text,
           selectedPolish: searchController.selectedPolish,
           selectedSymmetry: searchController.selectedSymmetry,
           selectLab: searchController.selectedLabs,
+          selectShade: searchController.isShadesSelected,
+          selectcertiNo: searchController.txtcer.text,
+          selectCity: searchController.isLocationSelectedList,
         ),
       ),
     );
-    // print("searchController.averageValue==>${searchController.averageValue}");
   }
 
   @override

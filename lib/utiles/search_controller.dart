@@ -50,19 +50,17 @@ class ControllerSearch extends GetxController {
   List<String> selectedLabs = [];
 
   ///location
-  List locationList = ["Surat"];
-  List<bool> isLocationSelected = [false];
-  late String isLocationSelectedList;
+  List locationList = ["SURAT", "DELHI"];
+  List<String> isLocationSelectedList = [];
 
   ///shades
   List shadesList = [
-    "NO BGM",
+    "NON",
     "Brown",
     "BLACK",
     "MIX TINCH",
   ];
-  List<bool> isShadesSelected = [false, false, false, false];
-  late String isShadesSelectedList;
+  List<String> isShadesSelected = [];
 
   ///h&A
   List handaList = [
@@ -151,7 +149,6 @@ class ControllerSearch extends GetxController {
   List<String> selectedShapes = [];
 
   ///Certificate
-  TextEditingController txtCert = TextEditingController();
   TextEditingController txtcer = TextEditingController();
 
   ///price

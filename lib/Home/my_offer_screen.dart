@@ -106,14 +106,14 @@ class _MyOffersScreenState extends State<MyOffersScreen> {
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => DiamondDetailsScreen(
-                                        next: false,
-                                        itemData: datacontroller
-                                            .offerDatalist[index]),
-                                  ));
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //       builder: (context) => DiamondDetailsScreen(
+                              //           next: false,
+                              //           itemData: datacontroller
+                              //               .offerDatalist[index]),
+                              //     ));
                             },
                             child: Padding(
                               padding: const EdgeInsets.only(

@@ -106,15 +106,15 @@ class _ExclusiveScreenState extends State<ExclusiveScreen> {
                           return SingleChildScrollView(
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => DiamondDetailsScreen(
-                                        next: false,
-                                        itemData: datacontroller
-                                            .exclusiveDatalist[index]),
-                                  ),
-                                );
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => DiamondDetailsScreen(
+                                //         next: false,
+                                //         itemData: datacontroller
+                                //             .exclusiveDatalist[index]),
+                                //   ),
+                                // );
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(

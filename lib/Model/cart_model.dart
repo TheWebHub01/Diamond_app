@@ -52,9 +52,9 @@ class CartItem {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'comments': comments,
+      'Comments': comments,
       'certiNo': certiNo,
-      'certificateUrl': certificateUrl,
+      'certificate_url': certificateUrl,
       'certified': certified,
       'city': city,
       'clarity': clarity,
@@ -62,45 +62,47 @@ class CartItem {
       'cut': cut,
       'depth': depth,
       'fluorescene': fluorescene,
-      'imageUrl': imageUrl,
+      'image_url': imageUrl,
       'mesurement': mesurement,
       'polish': polish,
       'shape': shape,
       'size': size,
       'sizeRange': sizeRange,
       'status': status,
-      'stoneID': stoneID,
+      'stone_ID': stoneID,
       'symm': symm,
       'table': table,
       'type': type,
-      'videoUrl': videoUrl,
+      'video_url': videoUrl,
     };
   }
 
   factory CartItem.fromMap(Map<String, dynamic> map) {
     return CartItem(
-        id: map['id'],
-        certiNo: map['certiNo'],
-        certificateUrl: map['certificate_url'],
-        certified: map['certified'],
-        city: map['city'],
-        clarity: map['clarity'],
-        color: map['color'],
-        cut: map['cut'],
-        comments: map['Comments'],
-        depth: map['depth'],
-        fluorescene: map['fluorescene'],
-        imageUrl: map['image_url'],
-        mesurement: map['mesurement'],
-        polish: map['polish'],
-        shape: map['shape'],
-        size: map['size'],
-        sizeRange: map['sizeRange'],
-        stoneID: map['stone_ID'],
-        symm: map['symm'],
-        table: map['table'],
-        type: map['type'],
-        videoUrl: map['video_url'],
-        status: map['status']);
+      id: map['id'] ?? '', // Ensure default empty string if null
+      certiNo: map['certiNo'] ?? '',
+      certificateUrl:
+          map['certificate_url'] ?? '', // Correct field name from Firestore
+      certified: map['certified'] ?? '',
+      city: map['city'] ?? '',
+      clarity: map['clarity'] ?? '',
+      color: map['color'] ?? '',
+      cut: map['cut'] ?? '',
+      comments: map['Comments'] ?? '', // Correct field name (not 'Comments')
+      depth: map['depth'] ?? '',
+      fluorescene: map['fluorescene'] ?? '',
+      imageUrl: map['image_url'] ?? '', // Correct field name
+      mesurement: map['mesurement'] ?? '',
+      polish: map['polish'] ?? '',
+      shape: map['shape'] ?? '',
+      size: map['size'] ?? '',
+      sizeRange: map['sizeRange'] ?? '',
+      stoneID: map['stone_ID'] ?? '', // Correct field name (not 'stone_ID')
+      symm: map['symm'] ?? '',
+      table: map['table'] ?? '',
+      type: map['type'] ?? '',
+      videoUrl: map['video_url'] ?? '', // Correct field name
+      status: map['status'] ?? '',
+    );
   }
 }

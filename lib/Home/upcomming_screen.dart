@@ -103,15 +103,15 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          DiamondDetailsScreen(
-                                              next: true,
-                                              itemData: datacontroller
-                                                  .upcommingDatalist[index]),
-                                    ));
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //       builder: (context) =>
+                                //           DiamondDetailsScreen(
+                                //               next: true,
+                                //               itemData: datacontroller
+                                //                   .upcommingDatalist[index]),
+                                //     ));
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(

@@ -952,33 +952,42 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             SizedBox(height: 2.h),
             SizedBox(
-              height: 80,
+              height: 20.h,
               child: ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: searchController.locationList.length,
                 itemBuilder: (context, s) {
+                  final Loaction = searchController.locationList[s];
+                  final isSelected = searchController.isLocationSelectedList
+                      .contains(Loaction);
                   return Padding(
-                    padding: const EdgeInsets.all(5),
+                    padding:
+                        const EdgeInsets.only(bottom: 5, left: 5, right: 5),
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
-                          searchController.isLocationSelectedList =
-                              searchController.locationList[s];
-                          searchController.isLocationSelected[s] =
-                              !searchController.isLocationSelected[s];
+                          if (isSelected) {
+                            // Remove from selected list if already selected
+                            searchController.isLocationSelectedList
+                                .remove(Loaction);
+                          } else {
+                            // Add to selected list if not selected
+                            searchController.isLocationSelectedList
+                                .add(Loaction);
+                          }
                         });
                       },
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(
-                              color: searchController.isLocationSelected[s]
+                              color: isSelected
                                   ? const Color(0xffA47842)
                                   : Colors.grey,
                               width: 2.0),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: ListTile(
-                          selectedColor: searchController.isLocationSelected[s]
+                          selectedColor: isSelected
                               ? const Color(0xffA47842)
                               : Colors.white,
                           enabled: true,
@@ -987,9 +996,9 @@ class _SearchScreenState extends State<SearchScreen> {
                             height: 31,
                           ),
                           title: Text(
-                            searchController.locationList[s],
+                            Loaction,
                             style: TextStyle(
-                              color: searchController.isLocationSelected[s]
+                              color: isSelected
                                   ? const Color(0xffA47842)
                                   : Colors.grey,
                             ),
@@ -1093,41 +1102,51 @@ class _SearchScreenState extends State<SearchScreen> {
                 scrollDirection: Axis.horizontal,
                 itemCount: searchController.shadesList.length,
                 itemBuilder: (context, s) {
+                  final shade =
+                      searchController.shadesList[s]; // Get the current shade
+                  final isSelected = searchController.isShadesSelected
+                      .contains(shade); // Check if the shade is selected
+
                   return Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            searchController.isShadesSelectedList =
-                                searchController.shadesList[s];
-                            searchController.isShadesSelected[s] =
-                                !searchController.isShadesSelected[s];
-                          });
-                        },
-                        child: Container(
-                          // width: 55,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: searchController.isShadesSelected[s]
-                                      ? const Color(0xffA47842)
-                                      : Colors.grey),
-                              borderRadius: BorderRadius.circular(10),
-                              color: searchController.isShadesSelected[s]
-                                  ? const Color(0xffA47842)
-                                  : Colors.white),
-                          padding: const EdgeInsets.all(10),
-                          child: Center(
-                            child: Text(
-                              searchController.shadesList[s],
-                              style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: searchController.isShadesSelected[s]
-                                      ? Colors.white
-                                      : Colors.grey),
+                    padding: const EdgeInsets.all(5),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          // Toggle the selected state
+                          if (isSelected) {
+                            // If selected, remove it from the list
+                            searchController.isShadesSelected.remove(shade);
+                          } else {
+                            // If not selected, add it to the list
+                            searchController.isShadesSelected.add(shade);
+                          }
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: isSelected
+                                ? const Color(0xffA47842)
+                                : Colors.grey,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                          color: isSelected
+                              ? const Color(0xffA47842)
+                              : Colors.white,
+                        ),
+                        padding: const EdgeInsets.all(10),
+                        child: Center(
+                          child: Text(
+                            shade,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: isSelected ? Colors.white : Colors.grey,
                             ),
                           ),
                         ),
-                      ));
+                      ),
+                    ),
+                  );
                 },
               ),
             ),

@@ -1,15 +1,70 @@
-import 'package:diamond_app/widget/bottom_navigation.dart';
+import 'package:diamond_app/Model/cart_model.dart';
+import 'package:diamond_app/service/cart_service.dart';
 import 'package:diamond_app/widget/custom_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class DiamondDetailsScreen extends StatefulWidget {
-  final Map<String, dynamic> itemData;
+  // Map<String, dynamic> itemData2;
+  final CartItem itemData2;
   final bool next;
+  String id;
+  String Comments;
+  String certiNo;
+  String certificate_url;
+  String certified;
+  String city;
+  String clarity;
+  String color;
+  String cut;
+  String depth;
+  String fluorescene;
+  String image_url;
+  String mesurement;
+  String polish;
+  String shape;
+  String size;
+  String sizeRange;
+  String status;
+  String stone_ID;
+  String symm;
+  String table;
+  String type;
+  String video_url;
+  String pageName;
 
-  const DiamondDetailsScreen(
-      {super.key, required this.itemData, required this.next});
+  DiamondDetailsScreen({
+    super.key,
+    // this.itemData2 = const {},
+    required this.next,
+    required this.certiNo,
+    required this.certificate_url,
+    required this.certified,
+    required this.city,
+    required this.clarity,
+    required this.color,
+    required this.Comments,
+    required this.cut,
+    required this.depth,
+    required this.fluorescene,
+    required this.id,
+    required this.image_url,
+    required this.mesurement,
+    required this.polish,
+    required this.shape,
+    required this.size,
+    required this.sizeRange,
+    required this.status,
+    required this.stone_ID,
+    required this.symm,
+    required this.table,
+    required this.type,
+    required this.video_url,
+    required this.pageName,
+    required this.itemData2,
+  });
 
   @override
   State<DiamondDetailsScreen> createState() => _DiamondDetailsScreenState();
@@ -21,32 +76,89 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
   TabController? _secondTabController;
   late WebViewController _controller;
   bool _isLoading = true;
+  String userid = '';
+  int _selectedIndex = 0;
+
+  Future<void> _onItemTapped(int index) async {
+    setState(() {
+      _selectedIndex = index;
+    });
+    if (_selectedIndex == 3) {
+      if (widget.pageName == "CartScreen") {
+
+
+
+
+        
+      } else {
+        final cartService = CartService();
+        final cartItem = CartItem(
+          id: widget.id,
+          comments: widget.Comments,
+          certiNo: widget.certiNo,
+          certificateUrl: widget.certificate_url,
+          certified: widget.certified,
+          city: widget.city,
+          clarity: widget.clarity,
+          color: widget.color,
+          cut: widget.cut,
+          depth: widget.depth,
+          fluorescene: widget.fluorescene,
+          imageUrl: widget.image_url,
+          mesurement: widget.mesurement,
+          polish: widget.polish,
+          shape: widget.shape,
+          size: widget.size,
+          sizeRange: widget.sizeRange,
+          status: widget.status,
+          stoneID: widget.stone_ID,
+          symm: widget.symm,
+          table: widget.table,
+          type: widget.type,
+          videoUrl: widget.video_url,
+        );
+        await cartService.addToCart(userid, cartItem);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${widget.shape} added to cart!')),
+        );
+      }
+    }
+  }
+
+  void getUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // prefs.getString('userid');
+    print("prefs.getString('userid'):=>${prefs.getString('userid')}");
+    setState(() {
+      userid = prefs.getString('userid')!;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _firstTabController = TabController(length: 3, vsync: this);
     _secondTabController = TabController(length: 2, vsync: this);
-
+    getUser();
     _controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted) 
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (url) {
             setState(() {
-              _isLoading = true; 
+              _isLoading = true;
             });
           },
           onPageFinished: (url) {
             setState(() {
-              _isLoading = false; 
+              _isLoading = false;
             });
           },
         ),
       )
-      ..loadRequest(Uri.parse(widget.itemData['video_url'] == ""
+      ..loadRequest(Uri.parse(widget.video_url == ""
           ? "https://view-360.video/Video?d=C15723"
-          : "${widget.itemData['video_url']}"));
+          : "${widget.video_url}"));
   }
 
   @override
@@ -59,10 +171,37 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
 
   @override
   Widget build(BuildContext context) {
+    print("widget.itemData2:=>${widget.image_url}");
     Map<String, double> result =
-        extractMeasurement(widget.itemData['mesurement']);
+        extractMeasurement(widget.itemData2.mesurement);
     return SafeArea(
       child: Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _selectedIndex,
+          backgroundColor: const Color(0xffFAFAFA),
+          selectedItemColor: Colors.brown,
+          unselectedItemColor: Colors.grey,
+          unselectedLabelStyle: const TextStyle(color: Colors.grey),
+          showUnselectedLabels: true,
+          onTap: _onItemTapped,
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.percent), label: "make Offer"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.shopping_bag_outlined), label: "Buy Now"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.front_hand_outlined), label: "Hold Now"),
+            widget.pageName == "CartScreen"
+                ? BottomNavigationBarItem(
+                    icon: Icon(Icons.remove_shopping_cart_outlined),
+                    label: "Remove Cart")
+                : BottomNavigationBarItem(
+                    icon: Icon(Icons.add_shopping_cart_outlined),
+                    label: "Add Cart"),
+            BottomNavigationBarItem(icon: Icon(Icons.add), label: "Add Memo"),
+          ],
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -71,9 +210,7 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
                   Navigator.pop(context);
                 },
                 showActionButton: false,
-                title: widget.next == true
-                    ? "Upcomming Details"
-                    : "New Arrival Details",
+                title: widget.itemData2!.stoneID,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -125,11 +262,11 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
                                 width: 240,
                                 child: Padding(
                                   padding: const EdgeInsets.all(10),
-                                  child: widget.itemData['image_url'] == ""
+                                  child: widget.itemData2!.imageUrl == ""
                                       ? Image.asset(
                                           "assets/images/no_image.png")
                                       : Image.network(
-                                          '${widget.itemData['image_url']}',
+                                          '${widget.itemData2!.imageUrl}',
                                         ),
                                 ),
                               ),
@@ -144,8 +281,10 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
                           controller: _controller,
                         ),
                         if (_isLoading)
-                          Center(
-                            child: CircularProgressIndicator(),
+                          const Center(
+                            child: const CircularProgressIndicator(
+                              color: Color(0xffAA864E),
+                            ),
                           ),
                       ],
                     ),
@@ -263,7 +402,7 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
                 ),
               ),
               SizedBox(
-                height: 300,
+                height: 280,
                 child: TabBarView(
                   physics: const NeverScrollableScrollPhysics(),
                   controller: _secondTabController,
@@ -283,7 +422,7 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
                               const Text("CUT:",
                                   style: TextStyle(color: Color(0xffA47842))),
                               Text(
-                                '${widget.itemData['cut']}',
+                                '${widget.itemData2!.cut}',
                               ),
                             ],
                           ),
@@ -296,7 +435,7 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
                               const Text("COLOR:",
                                   style: TextStyle(color: Color(0xffA47842))),
                               Text(
-                                '${widget.itemData['color']}',
+                                '${widget.itemData2!.color}',
                               ),
                               const Text("POLISH:",
                                   style: TextStyle(color: Color(0xffA47842))),
@@ -313,12 +452,12 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
                               const Text("CLARITY:",
                                   style: TextStyle(color: Color(0xffA47842))),
                               Text(
-                                '${widget.itemData['clarity']}',
+                                '${widget.itemData2!.clarity}',
                               ),
                               const Text("SYMM:",
                                   style: TextStyle(color: Color(0xffA47842))),
                               Text(
-                                '${widget.itemData['symm']}',
+                                '${widget.itemData2!.symm}',
                               ),
                             ],
                           ),
@@ -331,12 +470,12 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
                               const Text("LAB:",
                                   style: TextStyle(color: Color(0xffA47842))),
                               Text(
-                                '${widget.itemData['certified']}',
+                                '${widget.itemData2!.certified}',
                               ),
                               const Text("FLS:",
                                   style: TextStyle(color: Color(0xffA47842))),
                               Text(
-                                '${widget.itemData['fluorescene']}',
+                                '${widget.itemData2!.fluorescene}',
                               ),
                             ],
                           ),
@@ -349,7 +488,7 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
                             children: [
                               const Text("LOCATION",
                                   style: TextStyle(color: Color(0xffA47842))),
-                              Text('${widget.itemData['city']}'),
+                              Text('${widget.itemData2!.city}'),
                               const Text("REPORT:",
                                   style: TextStyle(color: Color(0xffA47842))),
                               const Text("639427111"),
@@ -370,7 +509,7 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
                               const Text("TABLE:",
                                   style: TextStyle(color: Color(0xffA47842))),
                               Text(
-                                '${widget.itemData['table']}',
+                                '${widget.itemData2!.table}',
                               ),
                               const Text("GIRDLE:",
                                   style: TextStyle(color: Color(0xffA47842))),
@@ -387,7 +526,7 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
                               const Text("DEPTH:",
                                   style: TextStyle(color: Color(0xffA47842))),
                               Text(
-                                '${widget.itemData['depth']}',
+                                '${widget.itemData2!.depth}',
                               ),
                               const Text("RATIO:",
                                   style: TextStyle(color: Color(0xffA47842))),
@@ -405,7 +544,7 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
                               const Text("CR ANGLE:",
                                   style: TextStyle(color: Color(0xffA47842))),
                               const Text('3.000'
-                                  // '${widget.itemData['crown_angle']}',
+                                  // '${widget.itemData2['crown_angle']}',
                                   ),
                               const Text("LENGTH:",
                                   style: TextStyle(color: Color(0xffA47842))),
@@ -424,7 +563,7 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
                               const Text("CR HEIGHT",
                                   style: TextStyle(color: Color(0xffA47842))),
                               const Text('5.000'
-                                  // '${widget.itemData['height']}',
+                                  // '${widget.itemData2['height']}',
                                   ),
                               const Text("WIDTH:",
                                   style: TextStyle(color: Color(0xffA47842))),
@@ -442,12 +581,12 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
                               const Text("PAV ANGLE",
                                   style: TextStyle(color: Color(0xffA47842))),
                               const Text('4.000'
-                                  // '${widget.itemData['pav_angle']}',
+                                  // '${widget.itemData2['pav_angle']}',
                                   ),
                               const Text("DEPTH:",
                                   style: TextStyle(color: Color(0xffA47842))),
                               Text(
-                                '${widget.itemData['depth']}',
+                                '${widget.itemData2!.depth}',
                               ),
                             ],
                           ),
@@ -461,7 +600,7 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
                               Text("PAV HEIGHT:",
                                   style: TextStyle(color: Color(0xffA47842))),
                               Text('5.000'
-                                  // '${widget.itemData['pav_height']}',
+                                  // '${widget.itemData2['pav_height']}',
                                   ),
                               Text("CULET:",
                                   style: TextStyle(color: Color(0xffA47842))),
@@ -475,16 +614,13 @@ class _DiamondDetailsScreenState extends State<DiamondDetailsScreen>
                         SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Text(
-                              "REPORT COMMENT: ${widget.itemData['Comments']}",
+                              "REPORT COMMENT: ${widget.itemData2!.comments}",
                             ))
                       ],
                     ),
                   ],
                 ),
               ),
-              // BottamnavBar(
-              //   screens: [],
-              // ),
             ],
           ),
         ),
